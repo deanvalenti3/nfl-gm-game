@@ -3,6 +3,7 @@ import type { Player, Position, ScenarioSnapshot } from "@/domain/types";
 import { capSummary, freeAgents, userRoster, type Action, type RunState } from "@/engine/game";
 import { DEFENSE, OFFENSE, STARTER_SLOTS, buildDepthChart, gradePositions, rosterAge } from "@/engine/roster";
 import { gradeTone, publicGrade } from "@/engine/grades";
+import { schemeDef } from "@/engine/scheme";
 import { fmtMoney } from "@/engine/cap";
 import { Button, Headline, Pill, Sheet, Stat } from "@/components/ui";
 import { PlayerCard } from "@/components/PlayerCard";
@@ -89,6 +90,7 @@ export function Roster({ state, snapshot, dispatch, inSeason = false }: { state:
             <Button size="lg" full disabled={tooFew} onClick={() => dispatch({ type: "START_SEASON" })}>Start season</Button>
           </div>
           {tooFew && <p className="text-[15px] text-down">You need at least {snapshot.scenario.minRosterForSeason} players to start the season.</p>}
+          {!tooFew && <p className="text-[14px] text-ink-3">Starting the season locks your scheme ({schemeDef("offense", state.scheme.offense).name} / {schemeDef("defense", state.scheme.defense).name}). Change it from the team sheet first if you want.</p>}
         </>
       )}
 

@@ -5,6 +5,7 @@ import { useRun } from "@/hooks/useRun";
 import { fmtMoney } from "@/engine/cap";
 import { PhaseStrip, phaseTitle } from "./PhaseStrip";
 import { Ticker } from "./Ticker";
+import { TeamRail } from "./TeamRail";
 import { Briefing } from "./screens/Briefing";
 import { Audit } from "./screens/Audit";
 import { Needs } from "./screens/Needs";
@@ -22,6 +23,7 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
   const { state, dispatch } = useRun(snapshot, initial);
   const [showFeed, setShowFeed] = useState(false);
   const [showRoster, setShowRoster] = useState(false);
+  const [showTeam, setShowTeam] = useState(false);
   const team = snapshot.teams.find((t) => t.id === state.teamId)!;
   const cap = capSummary(state, snapshot);
 
@@ -63,7 +65,12 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
                 <span className={`display num text-[18px] font-bold ${cap.space < 0 ? "text-down" : "text-up"}`}>{fmtMoney(cap.space, { decimals: 1 })}</span>
               </button>
             )}
-            <button onClick={() => setShowFeed(true)} className="rounded-lg bg-sunk px-3 py-1.5 lg:hidden" aria-label="League feed">
+            {inRun && (
+              <button onClick={() => setShowTeam(true)} className="rounded-lg bg-sunk px-3 py-1.5 lg:hidden" aria-label="Team sheet">
+                <span className="label">Team</span>
+              </button>
+            )}
+            <button onClick={() => setShowFeed(true)} className="rounded-lg bg-sunk px-3 py-1.5 xl:hidden" aria-label="League feed">
               <span className="label">Feed</span>
             </button>
             <PhaseStrip phase={state.phase} />
@@ -71,7 +78,12 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
         </div>
       </header>
 
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 pb-20 pt-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div className={`mx-auto grid w-full max-w-7xl gap-6 px-4 pb-20 pt-6 sm:px-6 ${inRun ? "lg:grid-cols-[250px_minmax(0,1fr)] xl:grid-cols-[250px_minmax(0,1fr)_300px]" : "xl:grid-cols-[minmax(0,1fr)_300px]"}`}>
+        {inRun && (
+          <aside className="rail hidden max-h-[calc(100dvh-80px)] overflow-y-auto pr-1 lg:sticky lg:top-[72px] lg:block">
+            <TeamRail state={state} snapshot={snapshot} dispatch={dispatch} />
+          </aside>
+        )}
         <main key={state.phase} className="anim-fade-up mx-auto w-full max-w-2xl lg:mx-0 lg:max-w-none">
           {state.phase === "BRIEFING" && <Briefing state={state} snapshot={snapshot} onStart={() => dispatch({ type: "START" })} />}
           {state.phase === "AUDIT" && <Audit state={state} snapshot={snapshot} dispatch={dispatch} />}
@@ -85,7 +97,7 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
           {state.phase === "PLAYOFFS" && <Playoffs state={state} snapshot={snapshot} dispatch={dispatch} />}
           {state.phase === "REPORT" && state.report && <Report state={state} snapshot={snapshot} onReplay={() => dispatch({ type: "RESET" })} onNewTeam={onExit} />}
         </main>
-        <aside className="rail hidden max-h-[calc(100dvh-80px)] overflow-y-auto lg:sticky lg:top-[72px] lg:block">
+        <aside className="rail hidden max-h-[calc(100dvh-80px)] overflow-y-auto xl:sticky xl:top-[72px] xl:block">
           <div className="label mb-2">League transactions</div>
           <Ticker items={state.feed} teams={snapshot.teams} userTeam={state.teamId} />
         </aside>
@@ -93,6 +105,9 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
 
       <Sheet open={showFeed} onClose={() => setShowFeed(false)} title="League transactions">
         <Ticker items={state.feed} teams={snapshot.teams} userTeam={state.teamId} limit={60} />
+      </Sheet>
+      <Sheet open={showTeam} onClose={() => setShowTeam(false)} title="Team sheet">
+        <TeamRail state={state} snapshot={snapshot} dispatch={dispatch} />
       </Sheet>
       <Sheet open={showRoster} onClose={() => setShowRoster(false)} title="Depth chart" wide>
         <Roster state={state} snapshot={snapshot} dispatch={dispatch} inSeason />

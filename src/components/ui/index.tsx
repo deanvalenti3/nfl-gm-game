@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { createPortal } from "react-dom";
 import type { Tier } from "@/domain/types";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
@@ -123,7 +124,7 @@ export function ScoreRing({ value, label, size = 170 }: { value: number; label?:
 
 export function Sheet({ open, onClose, title, children, wide = false }: { open: boolean; onClose: () => void; title: ReactNode; children: ReactNode; wide?: boolean }) {
   if (!open) return null;
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-6" onClick={onClose} role="dialog" aria-modal>
       <div className={`anim-pop max-h-[92dvh] w-full overflow-y-auto rounded-t-2xl border border-line bg-elev p-5 shadow-lift sm:rounded-2xl ${wide ? "sm:max-w-4xl" : "sm:max-w-xl"}`} onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-start justify-between gap-3">
@@ -134,7 +135,8 @@ export function Sheet({ open, onClose, title, children, wide = false }: { open: 
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

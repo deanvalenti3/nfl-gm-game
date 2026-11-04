@@ -1,5 +1,6 @@
 import type { Player, Position, TeamProfile, UnitRatings } from "@/domain/types";
 import { unitRatings, calculateTeamStrength, buildDepthChart } from "./roster";
+import { schemeBonus, type Scheme } from "./scheme";
 
 /**
  * LeagueAI: what the other 31 front offices want.
@@ -61,6 +62,7 @@ export function aiUnitRatings(profile: TeamProfile, rosterNow: Player[], departe
   return u;
 }
 
-export function userTeamStrength(roster: Player[], overrides: Record<string, string>): number {
-  return calculateTeamStrength(unitRatings(roster, buildDepthChart(roster, overrides)));
+export function userTeamStrength(roster: Player[], overrides: Record<string, string>, scheme?: Scheme): number {
+  const base = calculateTeamStrength(unitRatings(roster, buildDepthChart(roster, overrides)));
+  return scheme ? base + schemeBonus(roster, scheme, overrides) : base;
 }

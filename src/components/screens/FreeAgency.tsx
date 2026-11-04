@@ -5,6 +5,7 @@ import { fairAav, shortlist, suggestedOffer, type Offer, type Resolution } from 
 import { buildOfferContract, fmtMoney } from "@/engine/cap";
 import { Button, Callout, Headline, Pill, Sheet, Stat } from "@/components/ui";
 import { PlayerCard } from "@/components/PlayerCard";
+import { isEmphasized } from "@/engine/scheme";
 
 export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; snapshot: ScenarioSnapshot; dispatch: (a: Action) => void }) {
   const [offering, setOffering] = useState<Player | null>(null);
@@ -122,7 +123,7 @@ function FreeAgentRow({ player, state, offer, needRank, onOffer, onPass, onWithd
   const fit = needRank === 0 ? "EXCELLENT" : needRank > 0 ? "GOOD" : "NEUTRAL";
   return (
     <div className={`card p-3 ${offer ? "border-team/60" : ""}`}>
-      <PlayerCard player={player} year={state.year} />
+      <PlayerCard player={player} year={state.year} schemeFit={isEmphasized(player.pos, state.scheme)} />
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <Pill tone={m.interest === "HIGH" ? "down" : m.interest === "MEDIUM" ? "risk" : "neutral"}>Market: {m.interest}</Pill>
         <Pill tone={fit === "EXCELLENT" ? "up" : fit === "GOOD" ? "even" : "neutral"}>Fit: {fit}</Pill>

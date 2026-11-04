@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { NE_2025 } from "@/data/scenarios/ne-2025";
 import { M } from "@/data/build";
-import { capSummary, createRun, currentPick, freeAgents, runReducer, tradeContext, userOnClock, userRoster, type Action, type RunState } from "@/engine/game";
+import { capSummary, createRun, currentPick, freeAgents, runReducer, teamStrength, tradeContext, userOnClock, userRoster, type Action, type RunState } from "@/engine/game";
 import { evaluateTrade } from "@/engine/trade";
 import { calculateDeadMoney } from "@/engine/cap";
 
@@ -207,5 +207,20 @@ describe("Run state machine", () => {
       return total / 6;
     };
     expect(winsFor(15)).toBeGreaterThan(winsFor(0) + 3);
+  });
+});
+
+describe("Scheme", () => {
+  it("changes team strength, and locks when the season starts", () => {
+    let s = throughAudit(createRun(NE_2025, 8));
+    s = run(s, { type: "CONFIRM_NEEDS" }, { type: "FA_FINISH" }, { type: "TRADE_DONE" }, { type: "DRAFT_AUTO_REMAINING" });
+    const before = teamStrength(s, "NE");
+    s = reduce(s, { type: "SET_SCHEME", offense: "POWER", defense: "COVERAGE" });
+    expect(s.scheme.offense).toBe("POWER");
+    expect(teamStrength(s, "NE")).not.toBe(before);
+    s = reduce(s, { type: "START_SEASON" });
+    expect(s.scheme.locked).toBe(true);
+    const locked = reduce(s, { type: "SET_SCHEME", offense: "SPREAD" });
+    expect(locked).toBe(s);
   });
 });

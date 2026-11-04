@@ -7,7 +7,7 @@ import { Pill } from "./ui";
  * Roster card: scouting grade, name, position, age, last season's line, contract line.
  * Everything here is information the GM would have had on the cutoff date.
  */
-export function PlayerCard({ player, year, right, onClick, selected, muted, teamLabel, compact = false }: { player: Player; year: number; right?: React.ReactNode; onClick?: () => void; selected?: boolean; muted?: boolean; teamLabel?: string; compact?: boolean }) {
+export function PlayerCard({ player, year, right, onClick, selected, muted, teamLabel, compact = false, schemeFit = false }: { player: Player; year: number; right?: React.ReactNode; onClick?: () => void; selected?: boolean; muted?: boolean; teamLabel?: string; compact?: boolean; schemeFit?: boolean }) {
   const grade = publicGrade(player);
   const tone = gradeTone(grade);
   const c = player.contract;
@@ -26,6 +26,7 @@ export function PlayerCard({ player, year, right, onClick, selected, muted, team
           <span className="display text-[15px] font-bold uppercase tracking-wide text-ink-2">{player.pos} · {player.age}</span>
           {injured && <Pill tone="down">OUT {player.injuredWeeks! >= 18 ? "SZN" : `${player.injuredWeeks}W`}</Pill>}
           {teamLabel && <Pill>{teamLabel}</Pill>}
+          {schemeFit && <Pill tone="team">Scheme fit</Pill>}
         </div>
         {!compact && <div className="num mt-0.5 truncate text-[14px] text-ink-2">{statLine(player.pos, player.stats)}</div>}
         <div className="num mt-0.5 text-[14px] text-ink-3">

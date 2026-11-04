@@ -193,6 +193,8 @@ export interface Scenario {
   minRosterForSeason: number;
   objective: OwnershipObjective;
   realResult: RealResult;
+  /** Where the real coaching staff started; the GM can change it until the season begins. */
+  defaultScheme?: { offense: "WIDE_ZONE" | "SPREAD" | "POWER"; defense: "FOUR_THREE" | "THREE_FOUR" | "COVERAGE" };
   /** Shown in the briefing. */
   keyProblems: Position[];
   briefingNotes: string[];

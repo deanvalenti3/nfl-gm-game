@@ -35,6 +35,7 @@ export const NE_2025: ScenarioSnapshot = {
       targetWins: 9,
       playoffsRequired: false,
     },
+    defaultScheme: { offense: "SPREAD", defense: "FOUR_THREE" },
     realResult: { w: 14, l: 3, t: 0, playoffDepth: 4, label: "14–3 · AFC East champions · Lost Super Bowl LX" },
     keyProblems: ["OT", "WR", "EDGE", "DT"],
     briefingNotes: [

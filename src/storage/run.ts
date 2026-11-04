@@ -12,6 +12,19 @@ export interface RunStore {
 
 export const RUN_KEY = "front-office:run:v1";
 
+/** Fill fields added after a save was written so older runs keep working. */
+export function migrate(state: RunState): RunState {
+  if (!state.scheme) state.scheme = { offense: "SPREAD", defense: "FOUR_THREE", locked: state.phase === "SEASON" || state.phase === "DEADLINE" || state.phase === "PLAYOFFS" || state.phase === "REPORT" };
+  for (const f of state.feed ?? []) {
+    const legacy = f as unknown as { text?: string };
+    if (legacy.text && !f.headline) {
+      f.headline = legacy.text;
+      f.detail = "";
+    }
+  }
+  return state;
+}
+
 export class LocalStorageRunStore implements RunStore {
   constructor(private readonly storage: Storage | null = typeof window === "undefined" ? null : window.localStorage) {}
   load(): RunState | null {
@@ -20,7 +33,7 @@ export class LocalStorageRunStore implements RunStore {
       const raw = this.storage.getItem(RUN_KEY);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as RunState;
-      return parsed?.version === 1 && parsed.scenarioId ? parsed : null;
+      return parsed?.version === 1 && parsed.scenarioId ? migrate(parsed) : null;
     } catch {
       return null;
     }

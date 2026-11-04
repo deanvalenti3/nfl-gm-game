@@ -11,6 +11,7 @@ import { calculateGMScore, type GMReport } from "./scoring";
 import { computeSeeding, computeStandings, nextPlayoffRound, simulateGame, type PlayoffGame, type Seeding } from "./season";
 import { decideTrade, evaluateTrade, type TradeContext, type TradeEvaluation } from "./trade";
 import { marketAav } from "./value";
+import type { DefenseScheme, OffenseScheme, Scheme } from "./scheme";
 
 /**
  * The whole run as one serialisable state object and one pure reducer.
@@ -71,6 +72,7 @@ export interface RunState {
   lastTrade: { accepted: boolean; evaluation: TradeEvaluation; partner: string } | null;
   draft: { order: string[]; index: number; log: DraftLogEntry[]; sinceLast: number; userAuto: boolean };
   depthOverrides: Record<string, string>;
+  scheme: Scheme;
   schedule: Fixture[];
   results: GameResult[];
   week: number;
@@ -101,6 +103,7 @@ export type Action =
   | { type: "DRAFT_SELECT"; prospectId: string }
   | { type: "DRAFT_AUTO_REMAINING" }
   | { type: "SET_STARTER"; slot: string; playerId: string }
+  | { type: "SET_SCHEME"; offense?: OffenseScheme; defense?: DefenseScheme }
   | { type: "START_SEASON" }
   | { type: "SIM_WEEK" }
   | { type: "DEADLINE_DONE" }
@@ -141,6 +144,7 @@ export function createRun(snapshot: ScenarioSnapshot, seed = Date.now()): RunSta
     lastTrade: null,
     draft: { order: [], index: 0, log: [], sinceLast: 0, userAuto: false },
     depthOverrides: {},
+    scheme: { offense: snapshot.scenario.defaultScheme?.offense ?? "SPREAD", defense: snapshot.scenario.defaultScheme?.defense ?? "FOUR_THREE", locked: false },
     schedule: [],
     results: [],
     week: 1,
@@ -183,7 +187,7 @@ export function capSummary(state: RunState, snapshot: ScenarioSnapshot) {
 }
 
 export function teamStrength(state: RunState, teamId: string): number {
-  if (teamId === state.teamId) return userTeamStrength(userRoster(state), state.depthOverrides);
+  if (teamId === state.teamId) return userTeamStrength(userRoster(state), state.depthOverrides, state.scheme);
   const profile = state.profiles[teamId];
   const now = rosterOf(state, teamId);
   const departed = (state.departed[teamId] ?? []).map((id) => state.players[id]).filter(Boolean);
@@ -646,11 +650,19 @@ export function runReducer(snapshot: ScenarioSnapshot) {
         return done();
       }
 
+      case "SET_SCHEME": {
+        if (s.scheme.locked) return prev;
+        if (action.offense) s.scheme.offense = action.offense;
+        if (action.defense) s.scheme.defense = action.defense;
+        return done();
+      }
+
       case "START_SEASON": {
         if (s.phase !== "ROSTER") return prev;
         if (userRoster(s).length < scenario.minRosterForSeason) return prev;
         s.schedule = generateSchedule(snapshot.teams, rng.int(1, 1_000_000));
-        s.strengthEnd = userTeamStrength(userRoster(s), s.depthOverrides);
+        s.scheme.locked = true;
+        s.strengthEnd = userTeamStrength(userRoster(s), s.depthOverrides, s.scheme);
         s.phase = "SEASON";
         s.week = 1;
         return done();
@@ -703,7 +715,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
           transactions: s.transactions,
           userTeam: s.teamId,
           strengthStart: s.strengthStart,
-          strengthEnd: userTeamStrength(userRoster(s).map((p) => ({ ...p, injuredWeeks: 0 })), s.depthOverrides),
+          strengthEnd: userTeamStrength(userRoster(s).map((p) => ({ ...p, injuredWeeks: 0 })), s.depthOverrides, s.scheme),
           record: { w: st.w, l: st.l, t: st.t },
           madePlayoffs: po.madePlayoffs,
           playoffWins: po.wins,
