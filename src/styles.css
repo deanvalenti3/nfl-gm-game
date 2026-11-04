@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Front Office design tokens. Broadcast-dark by default; the team colour is an accent.
+   --------------------------------------------------------------------------- */
+:root {
+  --bg: #0b0d12;
+  --bg-elev: #12151c;
+  --bg-sunk: #07090d;
+  --ink: #f3f4f6;
+  --ink-2: #a3a8b4;
+  --ink-3: #6b7180;
+  --line: #1f2430;
+  --line-strong: #2f3645;
+
+  --team: #c60c30;
+  --team-ink: #ffffff;
+  --team-soft: rgb(198 12 48 / 0.16);
+
+  --up: #3ddc84;
+  --up-soft: rgb(61 220 132 / 0.14);
+  --even: #5ab0ff;
+  --even-soft: rgb(90 176 255 / 0.14);
+  --down: #ff5a5f;
+  --down-soft: rgb(255 90 95 / 0.14);
+  --risk: #ffb020;
+  --risk-soft: rgb(255 176 32 / 0.14);
+
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 10px 30px -18px rgb(0 0 0 / 0.8);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 50px -20px rgb(0 0 0 / 0.9);
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f2ee;
+  --bg-elev: #ffffff;
+  --bg-sunk: #e9e6df;
+  --ink: #14161c;
+  --ink-2: #555b68;
+  --ink-3: #8b90a0;
+  --line: #e2ded6;
+  --line-strong: #c9c4b9;
+  --team-soft: rgb(198 12 48 / 0.1);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 8px 24px -12px rgb(0 0 0 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.06), 0 16px 40px -16px rgb(0 0 0 / 0.3);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-sunk: var(--bg-sunk);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-team: var(--team);
+  --color-team-ink: var(--team-ink);
+  --color-team-soft: var(--team-soft);
+  --color-up: var(--up);
+  --color-up-soft: var(--up-soft);
+  --color-even: var(--even);
+  --color-even-soft: var(--even-soft);
+  --color-down: var(--down);
+  --color-down-soft: var(--down-soft);
+  --color-risk: var(--risk);
+  --color-risk-soft: var(--risk-soft);
+  --font-display: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --shadow-card: var(--shadow);
+  --shadow-lift: var(--shadow-lift);
+}
+
+html {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+button,
+[role="button"] {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+:focus-visible {
+  outline: 2px solid var(--team);
+  outline-offset: 2px;
+  border-radius: 0.4rem;
+}
+::selection {
+  background: var(--team-soft);
+}
+
+.display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.hairline {
+  background: linear-gradient(90deg, var(--team) 0, var(--team) 40%, transparent 100%);
+  height: 2px;
+}
+
+/* Motion */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop {
+  0% { transform: scale(0.97); opacity: 0; }
+  60% { transform: scale(1.015); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes ring {
+  from { stroke-dashoffset: var(--ring-start); }
+  to { stroke-dashoffset: var(--ring-end); }
+}
+@keyframes grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes flash {
+  0% { background-color: var(--team-soft); }
+  100% { background-color: transparent; }
+}
+.anim-fade-up { animation: fade-up 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-pop { animation: pop 0.38s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-grow { transform-origin: left; animation: grow 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-slide { animation: slide-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-flash { animation: flash 1.2s ease-out both; }
+.stagger > * { animation: fade-up 0.36s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger > *:nth-child(2) { animation-delay: 0.06s; }
+.stagger > *:nth-child(3) { animation-delay: 0.1s; }
+.stagger > *:nth-child(4) { animation-delay: 0.14s; }
+.stagger > *:nth-child(5) { animation-delay: 0.18s; }
+.stagger > *:nth-child(6) { animation-delay: 0.22s; }
+.stagger > *:nth-child(7) { animation-delay: 0.26s; }
+.stagger > *:nth-child(8) { animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Thin scrollbars in rails */
+.rail::-webkit-scrollbar { width: 6px; }
+.rail::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
