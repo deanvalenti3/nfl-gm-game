@@ -83,8 +83,8 @@ export const NE_2025: ScenarioSnapshot = {
     deadlineWeek: 9,
   },
   teams: TEAMS,
-  profiles: [NE_PROFILE, ...LEAGUE_PROFILES],
-  players: [...NE_ROSTER, ...LEAGUE_PLAYERS, ...FREE_AGENTS].map((p) => ({ ...p, stats: STATS_2024[p.id] })),
+  profiles: [NE_PROFILE, ...LEAGUE_PROFILES.filter((p) => p.teamId !== "NE")],
+  players: [...NE_ROSTER, ...LEAGUE_PLAYERS.filter((p) => p.teamId !== "NE"), ...FREE_AGENTS].map((p) => ({ ...p, stats: STATS_2024[p.id] })),
   picks: PICKS,
   prospects: PROSPECTS_2025,
 };

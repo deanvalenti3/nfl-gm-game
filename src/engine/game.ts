@@ -1,4 +1,4 @@
-import type { DraftPick, DraftProspect, GameResult, Player, Position, ScenarioSnapshot, TeamProfile, TradeAsset, Transaction } from "@/domain/types";
+import type { AuditDecision, DraftPick, DraftProspect, GameResult, Player, Position, ScenarioSnapshot, TeamProfile, TradeAsset, Transaction } from "@/domain/types";
 import { rookie } from "@/data/build";
 import { aiUnitRatings, deadlineStatus, evaluateTeamNeed, userTeamStrength } from "./ai";
 import { buildOfferContract, calculateCapSpace, calculateCutSavings, calculateDeadMoney, calculateTradeDeadMoney, capHit, fmtMoney } from "./cap";
@@ -87,7 +87,7 @@ export interface RunState {
 
 export type Action =
   | { type: "START" }
-  | { type: "AUDIT_DECIDE"; decisionId: string; choice: "KEEP" | "CUT" | "TRADE" }
+  | { type: "AUDIT_DECIDE"; decisionId: string; choice: AuditDecision["options"][number] }
   | { type: "SET_NEEDS"; needs: Position[] }
   | { type: "CONFIRM_NEEDS" }
   | { type: "FA_OFFER"; offer: Offer }
@@ -446,9 +446,15 @@ export function runReducer(snapshot: ScenarioSnapshot) {
         if (s.phase !== "AUDIT") return prev;
         const decision = scenario.auditDecisions[s.audit.index];
         if (!decision || decision.id !== action.decisionId) return prev;
+        if (!decision.options.includes(action.choice)) return prev;
         s.audit.decisions[decision.id] = action.choice;
         if (action.choice === "CUT") release(s, s.teamId, decision.playerId);
         if (action.choice === "TRADE") s.audit.shopping.push(decision.playerId);
+        if (action.choice === "TAG" || action.choice === "RESIGN") {
+          const terms = decision.terms?.[action.choice];
+          const p = s.players[decision.playerId];
+          if (terms && p && !p.teamId) sign(s, s.teamId, p.id, { playerId: p.id, teamId: s.teamId, ...terms });
+        }
         s.audit.index++;
         if (s.audit.index >= scenario.auditDecisions.length) s.phase = "NEEDS";
         return done();
@@ -723,6 +729,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
           divisionChamp: po.divisionChamp,
           nextYearSpace: cap.nextYearSpace,
           real: scenario.realResult,
+          prevWins: teamsById[s.teamId].prevRecord.w + teamsById[s.teamId].prevRecord.t * 0.5,
           deadMoney: s.deadMoney[s.teamId] ?? 0,
           year: s.year,
         });

@@ -1,6 +1,27 @@
 import { describe, expect, it } from "vitest";
 import { NE_2025 } from "@/data/scenarios/ne-2025";
+import { SCENARIOS } from "@/data/scenarios";
 import { capHit } from "@/engine/cap";
+
+describe.each(SCENARIOS.map((s) => [s.scenario.id, s] as const))("%s snapshot integrity", (_id, snap) => {
+  it("has unique player ids, a profile for 32 teams, 257 unique 2025 picks, and a full user roster", () => {
+    const ids = snap.players.map((p) => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(snap.profiles.length).toBe(32);
+    expect(new Set(snap.profiles.map((p) => p.teamId)).size).toBe(32);
+    const picks = snap.picks.filter((p) => p.year === 2025);
+    expect(picks.length).toBe(257);
+    expect(new Set(picks.map((p) => p.overall)).size).toBe(257);
+    expect(snap.players.filter((p) => p.teamId === snap.scenario.teamId).length).toBeGreaterThanOrEqual(40);
+    for (const d of snap.scenario.auditDecisions) {
+      const p = snap.players.find((x) => x.id === d.playerId);
+      expect(p, d.playerId).toBeDefined();
+      if (d.options.includes("TAG") || d.options.includes("RESIGN")) expect(p!.teamId).toBeNull();
+      else expect(p!.teamId).toBe(snap.scenario.teamId);
+    }
+    for (const p of snap.players.filter((p) => p.teamId)) expect(capHit(p.contract, 2025), p.name).toBeGreaterThan(0);
+  });
+});
 
 describe("NE 2025 snapshot integrity", () => {
   it("has unique player ids and no player on two teams", () => {

@@ -7,7 +7,7 @@ import type { Rng } from "./rng";
  */
 
 export function simulateGame(week: number, homeId: string, awayId: string, homeStrength: number, awayStrength: number, rng: Rng, stage: GameResult["stage"] = "REG"): GameResult {
-  const edge = (homeStrength - awayStrength) * 0.85 + 1.8; // home field
+  const edge = (homeStrength - awayStrength) * 0.72 + 1.8; // home field
   const diff = Math.round(rng.gauss(edge, 10));
   const total = Math.max(13, Math.round(rng.gauss(45, 9)));
   let home = Math.round((total + diff) / 2);

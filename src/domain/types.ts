@@ -210,8 +210,13 @@ export interface AuditDecision {
   id: string;
   playerId: string;
   prompt: string;
-  /** Which choices are offered. TRADE opens the trade builder later. */
-  options: ("KEEP" | "CUT" | "TRADE" | "RESTRUCTURE")[];
+  /**
+   * Which choices are offered. TRADE opens the trade builder later. TAG and RESIGN sign a
+   * pending free agent on `terms`; WALK lets him test the market.
+   */
+  options: ("KEEP" | "CUT" | "TRADE" | "TAG" | "RESIGN" | "WALK")[];
+  /** Contract terms per signing option. */
+  terms?: Partial<Record<"TAG" | "RESIGN", { years: number; aav: number; guaranteedPct: number }>>;
   context: string;
 }
 

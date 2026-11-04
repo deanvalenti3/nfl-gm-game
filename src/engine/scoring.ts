@@ -23,7 +23,7 @@ export interface GMReport {
   capHealth: "STRONG" | "HEALTHY" | "TIGHT" | "UNDERWATER";
   seasonLine: string;
   /** How the run compares with what really happened. */
-  benchmark: { real: RealResult; verdict: "BEAT" | "MATCHED" | "SHORT"; winDiff: number; depthDiff: number };
+  benchmark: { real: RealResult; verdict: "BEAT" | "MATCHED" | "SHORT"; winDiff: number; depthDiff: number; barWins: number };
 }
 
 export interface ScoringInput {
@@ -41,6 +41,8 @@ export interface ScoringInput {
   nextYearSpace: number;
   deadMoney: number;
   real: RealResult;
+  /** Last season's wins for the user's team. */
+  prevWins: number;
   year: number;
 }
 
@@ -53,10 +55,10 @@ export function calculateGMScore(input: ScoringInput): GMReport {
 
   // Roster improvement: +8 strength points = 100.
   const rosterDelta = input.strengthEnd - input.strengthStart;
-  const roster = clamp(50 + rosterDelta * 10);
+  const roster = clamp(50 + rosterDelta * 6);
 
   // Cap management.
-  const capScore = clamp(60 + input.nextYearSpace / 1_500_000 - input.deadMoney / 2_000_000);
+  const capScore = clamp(55 + input.nextYearSpace / 4_000_000 - input.deadMoney / 2_000_000);
   const capHealth: GMReport["capHealth"] = input.nextYearSpace > 40_000_000 ? "STRONG" : input.nextYearSpace > 10_000_000 ? "HEALTHY" : input.nextYearSpace > 0 ? "TIGHT" : "UNDERWATER";
 
   // Free-agent value: paid vs market for each signing.
@@ -127,7 +129,11 @@ export function calculateGMScore(input: ScoringInput): GMReport {
   const realWins = input.real.w + input.real.t * 0.5;
   const winDiff = wins - realWins;
   const depthDiff = depth - input.real.playoffDepth;
-  const season = clamp(70 + winDiff * 6 + depthDiff * 7);
+  // The score's bar is the tougher of real life and last year's record, so a real season wrecked
+  // by injury doesn't make the leaderboard trivial. Matching the bar is a 60; the verdict is still
+  // against real life.
+  const barWins = Math.max(realWins, input.prevWins);
+  const season = clamp(60 + (wins - barWins) * 6 + depthDiff * 7);
   const verdict: "BEAT" | "MATCHED" | "SHORT" = winDiff + depthDiff * 1.5 > 0.5 ? "BEAT" : winDiff + depthDiff * 1.5 >= -0.5 ? "MATCHED" : "SHORT";
 
   const dimensions = [
@@ -151,7 +157,7 @@ export function calculateGMScore(input: ScoringInput): GMReport {
   return {
     score, letter, dimensions: dimensions.map(({ key, label, score }) => ({ key, label, score })), bestMove, worstMove,
     draftSteal: steal && steal.delta > 2 ? steal : null, capHealth, seasonLine,
-    benchmark: { real: input.real, verdict, winDiff, depthDiff },
+    benchmark: { real: input.real, verdict, winDiff, depthDiff, barWins },
   };
 }
 

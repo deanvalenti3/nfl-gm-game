@@ -28,7 +28,7 @@ export function Report({ state, snapshot, onReplay, onNewTeam }: { state: RunSta
             </Pill>
           </div>
           <div className="num mt-1 text-[14px] text-ink-2">
-            {r.benchmark.winDiff >= 0 ? "+" : ""}{r.benchmark.winDiff} wins · {r.benchmark.depthDiff >= 0 ? "+" : ""}{r.benchmark.depthDiff} playoff rounds vs the real team
+            {r.benchmark.winDiff >= 0 ? "+" : ""}{r.benchmark.winDiff} wins · {r.benchmark.depthDiff >= 0 ? "+" : ""}{r.benchmark.depthDiff} playoff rounds vs the real team{r.benchmark.barWins > r.benchmark.real.w ? ` · scored against last year's ${r.benchmark.barWins} wins` : ""}
           </div>
         </div>
       </section>

@@ -28,6 +28,19 @@ interface TeamDef {
 const u = (qb: number, offSkill: number, oLine: number, passRush: number, runDefense: number, coverage: number, specialTeams: number, depth: number): UnitRatings => ({ qb, offSkill, oLine, passRush, runDefense, coverage, specialTeams, depth });
 
 const LEAGUE: Record<string, TeamDef> = {
+  NE: {
+    status: "REBUILDING", qb: "YOUNG STARTER", cap: 120, needs: ["OT", "WR", "EDGE", "DT", "LB"], units: u(74, 62, 58, 60, 66, 72, 70, 56),
+    players: [
+      ["Drake Maye", "QB", 22, 1, 74, ["r", 2024, 3, 3], { t: 3 }],
+      ["Rhamondre Stevenson", "RB", 27, 4, 73, ["v", 2024, 2028, 36 * M, 17 * M]],
+      ["Hunter Henry", "TE", 30, 9, 74, ["v", 2024, 2026, 27 * M, 16 * M, [5.6 * M, 9.5 * M, 11.9 * M]], { t: -1 }],
+      ["Mike Onwenu", "OT", 27, 5, 79, ["v", 2024, 2026, 57 * M, 38 * M, [8.1 * M, 18.9 * M, 21.3 * M]]],
+      ["Christian Barmore", "DT", 25, 4, 82, ["v", 2025, 2028, 84 * M, 41.8 * M, [9.9 * M, 20.5 * M, 24.8 * M, 25.8 * M]], { d: 60 }],
+      ["Christian Gonzalez", "CB", 22, 2, 84, ["r", 2023, 17, 2], { t: 2 }],
+      ["Kyle Dugger", "S", 29, 5, 73, ["v", 2024, 2027, 58 * M, 32.5 * M, [8 * M, 12.7 * M, 15.3 * M, 17 * M]], { t: -1 }],
+      ["Keion White", "EDGE", 26, 2, 71, ["r", 2023, 46, 2]],
+    ],
+  },
   BUF: {
     status: "CONTENDER", qb: "FRANCHISE", cap: 11, needs: ["WR", "DT", "CB", "S"], units: u(95, 76, 82, 78, 74, 76, 78, 76),
     players: [
@@ -531,6 +544,7 @@ function build(spec: Spec) {
   return min1(2025, spec[1]);
 }
 
+/** All 32 team profiles; a scenario replaces its own team's entry with the full roster. */
 export const LEAGUE_PROFILES: TeamProfile[] = Object.entries(LEAGUE).map(([teamId, d]) => ({
   teamId,
   status: d.status,
