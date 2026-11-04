@@ -18,6 +18,7 @@ export function Briefing({ state, snapshot, onStart }: { state: RunState; snapsh
       <section className="card p-5">
         <div className="label mb-1">Ownership expectations</div>
         <div className="display text-[27px] font-bold uppercase leading-tight">{sc.objective.headline}</div>
+        <p className="mt-2 text-[15px] leading-snug text-ink-2">The real result stays hidden until your season is over. No hindsight, no peeking.</p>
       </section>
 
       <section className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">

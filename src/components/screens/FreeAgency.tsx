@@ -39,7 +39,7 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
 
       <div className="grid grid-cols-3 gap-2.5">
         <Stat label="Cap space" value={fmtMoney(available, { decimals: 1 })} tone={available < 10_000_000 ? "risk" : "up"} sub={offersCount ? `${fmtMoney(committed)} in pending offers` : "after rookie reserve"} />
-        <Stat label="Offers out" value={offersCount} sub={asks.length ? `${asks.length} counter${asks.length > 1 ? "s" : ""} waiting` : "pending resolution"} />
+        <Stat label="Offers out" value={offersCount} sub={asks.length ? `${asks.length} agent${asks.length > 1 ? "s" : ""} at your door` : "pending resolution"} />
         <Stat label="Available" value={pool.length} sub="free agents left" />
       </div>
 
@@ -60,7 +60,8 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
 
       {asks.length > 0 && (
         <section className="flex flex-col gap-2">
-          <div className="label text-risk">Agents waiting on you</div>
+          <div className="label text-risk">Agents at your door</div>
+          <p className="text-[15px] text-ink-2">Deals brought to you. They hold for about a day, then the player moves on.</p>
           {asks.map(({ ask, rival }) => {
             const p = state.players[ask.playerId];
             return (
@@ -68,7 +69,7 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
                 <PlayerCard player={p} year={state.year} />
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                   <div className="text-[16px]">
-                    Asking <span className="num font-bold">{fmtMoney(ask.aav)}/yr</span> × {ask.years}, {Math.round(ask.guaranteedPct * 100)}% guaranteed{rival ? ` · ${teamName(rival)} is in` : ""}
+                    {rival ? "Wants" : "Pitching"} <span className="num font-bold">{fmtMoney(ask.aav)}/yr</span> × {ask.years}, {Math.round(ask.guaranteedPct * 100)}% guaranteed{rival ? ` · ${teamName(rival)} is in` : " · take it or counter"}
                   </div>
                   <div className="flex gap-2">
                     <Button size="sm" variant="ghost" onClick={() => dispatch({ type: "FA_PASS", playerId: p.id })}>Walk away</Button>

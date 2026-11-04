@@ -25,7 +25,10 @@ export interface FeedItem {
   id: number;
   when: string;
   teamId: string;
-  text: string;
+  /** "Signed WR Tee Higgins" */
+  headline: string;
+  /** "4 yrs / $91.0M" */
+  detail: string;
   kind: Transaction["kind"] | "NOTE";
 }
 
@@ -226,8 +229,8 @@ export function runReducer(snapshot: ScenarioSnapshot) {
   const teamsById = Object.fromEntries(snapshot.teams.map((t) => [t.id, t]));
   const teamName = (id: string) => teamsById[id]?.city.toUpperCase() ?? id;
 
-  function feed(s: RunState, teamId: string, text: string, kind: FeedItem["kind"], when: string) {
-    s.feed.unshift({ id: ++s.feedSeq, when, teamId, text, kind });
+  function feed(s: RunState, teamId: string, headline: string, detail: string, kind: FeedItem["kind"], when: string) {
+    s.feed.unshift({ id: ++s.feedSeq, when, teamId, headline, detail, kind });
     if (s.feed.length > 120) s.feed.length = 120;
   }
 
@@ -259,7 +262,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
       (s.departed[teamId] ??= []).push(playerId);
     }
     s.transactions.push({ kind: "RELEASE", teamId, playerId, savings, deadMoney: dead, week: whenLabel(s) });
-    feed(s, teamId, `${teamName(teamId)} released ${p.pos} ${p.name} · saves ${fmtMoney(savings)}`, "RELEASE", whenLabel(s));
+    feed(s, teamId, `Released ${p.pos} ${p.name}`, `Saves ${fmtMoney(savings)} · ${fmtMoney(dead)} dead`, "RELEASE", whenLabel(s));
   }
 
   function sign(s: RunState, teamId: string, playerId: string, offer: Offer) {
@@ -270,7 +273,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
     p.market = undefined;
     if (teamId !== s.teamId) s.profiles[teamId].capSpace -= contract.capHits[s.year];
     s.transactions.push({ kind: "SIGN", teamId, playerId, years: offer.years, total: contract.totalValue, aav: offer.aav, guaranteed: contract.guaranteed, week: whenLabel(s) });
-    feed(s, teamId, `${teamName(teamId)} signed ${p.pos} ${p.name} · ${offer.years} yrs / ${fmtMoney(contract.totalValue)}`, "SIGN", whenLabel(s));
+    feed(s, teamId, `Signed ${p.pos} ${p.name}`, `${offer.years} yr${offer.years > 1 ? "s" : ""} / ${fmtMoney(contract.totalValue)} · ${fmtMoney(contract.guaranteed)} gtd`, "SIGN", whenLabel(s));
   }
 
   function moveAsset(s: RunState, asset: TradeAsset, from: string, to: string) {
@@ -316,7 +319,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
     s.draft.log.push({ pickId: pick.id, overall: pick.overall!, round: pick.round, teamId: pick.teamId, playerId: player.id });
     s.draft.sinceLast++;
     s.transactions.push({ kind: "DRAFT", teamId: pick.teamId, playerId: player.id, pickId: pick.id, overall: pick.overall!, round: pick.round, week: "Draft" });
-    if (pick.teamId === s.teamId || pick.round === 1) feed(s, pick.teamId, `${teamName(pick.teamId)} selected ${prospect.pos} ${prospect.name} (${prospect.school}) · pick ${pick.overall}`, "DRAFT", "Draft");
+    if (pick.teamId === s.teamId || pick.round === 1) feed(s, pick.teamId, `Pick ${pick.overall} · ${prospect.pos} ${prospect.name}`, `${prospect.school} · Round ${pick.round}`, "DRAFT", "Draft");
   }
 
   function userAutoPick(s: RunState, rng: Rng, pick: DraftPick): DraftProspect | null {
@@ -376,7 +379,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
         const weeks = rng.chance(0.12) ? 30 : rng.int(1, 6);
         p.injuredWeeks = weeks;
         s.transactions.push({ kind: "INJURY", teamId: s.teamId, playerId: id, weeks, week: `Week ${week}` });
-        feed(s, s.teamId, `${p.pos} ${p.name} injured · ${weeks >= 18 ? "out for season" : `${weeks} wk${weeks > 1 ? "s" : ""}`}`, "INJURY", `Week ${week}`);
+        feed(s, s.teamId, `${p.pos} ${p.name} injured`, weeks >= 18 ? "Out for the season" : `Out ${weeks} week${weeks > 1 ? "s" : ""}`, "INJURY", `Week ${week}`);
       }
     }
     for (const p of Object.values(s.players)) {
@@ -457,6 +460,16 @@ export function runReducer(snapshot: ScenarioSnapshot) {
         if (s.phase !== "NEEDS") return prev;
         s.phase = "FREE_AGENCY";
         s.fa.day = 1;
+        // Agents come to you before the market opens: one mid-tier pitch per ranked need.
+        const pool = freeAgents(s);
+        for (const pos of s.needs) {
+          const candidates = pool.filter((p) => p.pos === pos && p.ability.ovr >= 68 && p.ability.ovr <= 80 && p.age <= 31 && !s.fa.asks[p.id]);
+          if (!candidates.length) continue;
+          const p = rng.pick(candidates);
+          const m = p.market!;
+          const years = Math.max(1, Math.min(4, m.years + (p.age >= 29 ? -1 : 0)));
+          s.fa.asks[p.id] = { ask: { playerId: p.id, teamId: s.teamId, years, aav: Math.round((m.aav * rng.range(0.93, 1.0)) / 100_000) * 100_000, guaranteedPct: Math.min(0.9, m.guaranteedPct + 0.1) }, rival: null };
+        }
         return done();
       }
 
@@ -509,7 +522,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
             delete s.fa.asks[id];
             continue;
           }
-          if (ask.rival && rng.chance(0.4)) {
+          if (rng.chance(ask.rival ? 0.4 : 0.3)) {
             const offer = generateFreeAgentOffer(p, profiles, rosters, capSpace, rng, s.fa.day);
             if (offer) {
               sign(s, offer.teamId, p.id, offer);
@@ -573,7 +586,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
         for (const a of action.give) moveAsset(s, a, s.teamId, action.partner);
         for (const a of action.get) moveAsset(s, a, action.partner, s.teamId);
         s.transactions.push({ kind: "TRADE", teams: [s.teamId, action.partner], sent: action.give, received: action.get, week: whenLabel(s) });
-        feed(s, s.teamId, `${teamName(s.teamId)} traded ${action.give.map((a) => assetLabel(s, a)).join(", ")} to ${teamName(action.partner)} for ${action.get.map((a) => assetLabel(s, a)).join(", ")}`, "TRADE", whenLabel(s));
+        feed(s, s.teamId, `Trade with ${teamName(action.partner)}`, `Get ${action.get.map((a) => assetLabel(s, a)).join(", ")} · Send ${action.give.map((a) => assetLabel(s, a)).join(", ")}`, "TRADE", whenLabel(s));
         s.audit.shopping = s.audit.shopping.filter((id) => s.players[id]?.teamId === s.teamId);
         return done();
       }
@@ -697,6 +710,7 @@ export function runReducer(snapshot: ScenarioSnapshot) {
           wonSuperBowl: po.wonSB,
           divisionChamp: po.divisionChamp,
           nextYearSpace: cap.nextYearSpace,
+          real: scenario.realResult,
           deadMoney: s.deadMoney[s.teamId] ?? 0,
           year: s.year,
         });

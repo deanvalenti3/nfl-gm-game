@@ -87,12 +87,12 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
         </main>
         <aside className="rail hidden max-h-[calc(100dvh-80px)] overflow-y-auto lg:sticky lg:top-[72px] lg:block">
           <div className="label mb-2">League transactions</div>
-          <Ticker items={state.feed} />
+          <Ticker items={state.feed} teams={snapshot.teams} userTeam={state.teamId} />
         </aside>
       </div>
 
       <Sheet open={showFeed} onClose={() => setShowFeed(false)} title="League transactions">
-        <Ticker items={state.feed} limit={60} />
+        <Ticker items={state.feed} teams={snapshot.teams} userTeam={state.teamId} limit={60} />
       </Sheet>
       <Sheet open={showRoster} onClose={() => setShowRoster(false)} title="Depth chart" wide>
         <Roster state={state} snapshot={snapshot} dispatch={dispatch} inSeason />

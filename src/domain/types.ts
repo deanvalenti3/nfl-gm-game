@@ -78,6 +78,22 @@ export interface Player {
   market?: FreeAgentMarket;
   /** Injured through this many remaining weeks (0 = healthy). */
   injuredWeeks?: number;
+  /** Previous season's line, when the snapshot has it. */
+  stats?: SeasonStats;
+}
+
+/** Previous-season production, aggregated from public box-score data. Only what a GM would glance at. */
+export interface SeasonStats {
+  gp: number;
+  /** Games with a starter-sized snap share. */
+  gs?: number;
+  /** Average snap share across games played, 0-100. */
+  snapPct?: number;
+  pass?: { cmp: number; att: number; yds: number; td: number; int: number };
+  rush?: { att: number; yds: number; td: number };
+  rec?: { rec: number; yds: number; td: number };
+  def?: { tkl: number; tfl: number; sk: number; int: number; pd: number; qbh: number };
+  kick?: { fgm: number; fga: number; long: number };
 }
 
 export interface FreeAgentMarket {
@@ -145,6 +161,16 @@ export interface UnitRatings {
   depth: number;
 }
 
+/** What actually happened, used only to judge the run after the season. Never shown before the report. */
+export interface RealResult {
+  w: number;
+  l: number;
+  t: number;
+  /** 0 missed playoffs, 1 lost wild card, 2 lost divisional, 3 lost conference, 4 lost Super Bowl, 5 won it. */
+  playoffDepth: number;
+  label: string;
+}
+
 export interface OwnershipObjective {
   headline: string;
   /** Minimum wins for the owner to consider the season a success. */
@@ -166,6 +192,7 @@ export interface Scenario {
   carryover: number;
   minRosterForSeason: number;
   objective: OwnershipObjective;
+  realResult: RealResult;
   /** Shown in the briefing. */
   keyProblems: Position[];
   briefingNotes: string[];

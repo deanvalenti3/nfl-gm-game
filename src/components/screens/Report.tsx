@@ -17,6 +17,20 @@ export function Report({ state, snapshot, onReplay, onNewTeam }: { state: RunSta
       <section className="card anim-pop flex flex-col items-center gap-2 px-6 py-8 text-center">
         <ScoreRing value={r.score} label={`GM Score · ${r.letter}`} />
         <div className="display text-[25px] font-bold uppercase">{r.seasonLine}</div>
+        <div className={`mt-2 w-full rounded-xl border px-4 py-3 text-left ${r.benchmark.verdict === "BEAT" ? "border-up/40 bg-up-soft" : r.benchmark.verdict === "MATCHED" ? "border-even/40 bg-even-soft" : "border-down/40 bg-down-soft"}`}>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="label">Real life</div>
+              <div className="display text-[19px] font-bold uppercase">{r.benchmark.real.label}</div>
+            </div>
+            <Pill tone={r.benchmark.verdict === "BEAT" ? "up" : r.benchmark.verdict === "MATCHED" ? "even" : "down"} className="text-[16px]">
+              {r.benchmark.verdict === "BEAT" ? "You beat it" : r.benchmark.verdict === "MATCHED" ? "You matched it" : "Fell short"}
+            </Pill>
+          </div>
+          <div className="num mt-1 text-[14px] text-ink-2">
+            {r.benchmark.winDiff >= 0 ? "+" : ""}{r.benchmark.winDiff} wins · {r.benchmark.depthDiff >= 0 ? "+" : ""}{r.benchmark.depthDiff} playoff rounds vs the real team
+          </div>
+        </div>
       </section>
 
       <section className="card p-5">
@@ -66,7 +80,7 @@ export function Report({ state, snapshot, onReplay, onNewTeam }: { state: RunSta
         </button>
         {showLog && (
           <div className="mt-3">
-            <Ticker items={mine} limit={100} compact />
+            <Ticker items={mine} teams={snapshot.teams} userTeam={state.teamId} limit={100} />
           </div>
         )}
       </section>

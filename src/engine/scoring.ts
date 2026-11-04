@@ -1,4 +1,4 @@
-import type { Player, Scenario, Transaction } from "@/domain/types";
+import type { Player, RealResult, Scenario, Transaction } from "@/domain/types";
 import { capHit, fmtMoney } from "./cap";
 import { marketAav, pickValueByOverall, playerValue, talentValue } from "./value";
 
@@ -22,6 +22,8 @@ export interface GMReport {
   draftSteal: MoveGrade | null;
   capHealth: "STRONG" | "HEALTHY" | "TIGHT" | "UNDERWATER";
   seasonLine: string;
+  /** How the run compares with what really happened. */
+  benchmark: { real: RealResult; verdict: "BEAT" | "MATCHED" | "SHORT"; winDiff: number; depthDiff: number };
 }
 
 export interface ScoringInput {
@@ -38,7 +40,7 @@ export interface ScoringInput {
   divisionChamp: boolean;
   nextYearSpace: number;
   deadMoney: number;
-  /** Rookie-year production proxy: drafted players by pick */
+  real: RealResult;
   year: number;
 }
 
@@ -47,7 +49,7 @@ function clamp(n: number, lo = 0, hi = 100) {
 }
 
 export function calculateGMScore(input: ScoringInput): GMReport {
-  const { scenario, players, transactions, userTeam, year } = input;
+  const { players, transactions, userTeam, year } = input;
 
   // Roster improvement: +8 strength points = 100.
   const rosterDelta = input.strengthEnd - input.strengthStart;
@@ -118,10 +120,15 @@ export function calculateGMScore(input: ScoringInput): GMReport {
     moves.push({ label: `Released ${p.pos} ${p.name}`, detail: `Saved ${fmtMoney(c.savings)}, ${fmtMoney(c.deadMoney)} dead`, delta: delta * 8 });
   }
 
-  // Season.
+  // Season: judged against what really happened. Matching real life is a 70; every win and every
+  // playoff round above or below it moves the needle.
   const wins = input.record.w + input.record.t * 0.5;
-  let season = clamp(30 + (wins - scenario.objective.targetWins) * 9 + (input.madePlayoffs ? 15 : 0) + input.playoffWins * 8 + (input.wonSuperBowl ? 15 : 0));
-  if (scenario.objective.playoffsRequired && !input.madePlayoffs) season = Math.min(season, 55);
+  const depth = input.wonSuperBowl ? 5 : input.madePlayoffs ? 1 + input.playoffWins : 0;
+  const realWins = input.real.w + input.real.t * 0.5;
+  const winDiff = wins - realWins;
+  const depthDiff = depth - input.real.playoffDepth;
+  const season = clamp(70 + winDiff * 6 + depthDiff * 7);
+  const verdict: "BEAT" | "MATCHED" | "SHORT" = winDiff + depthDiff * 1.5 > 0.5 ? "BEAT" : winDiff + depthDiff * 1.5 >= -0.5 ? "MATCHED" : "SHORT";
 
   const dimensions = [
     { key: "season", label: "Season result", score: Math.round(season), weight: 0.33 },
@@ -141,7 +148,11 @@ export function calculateGMScore(input: ScoringInput): GMReport {
   const rec = `${input.record.w}–${input.record.l}${input.record.t ? `–${input.record.t}` : ""}`;
   const seasonLine = input.wonSuperBowl ? `${rec} · Super Bowl Champions` : input.madePlayoffs ? `${rec} · ${input.divisionChamp ? "Division Champions" : "Wild Card"} · ${playoffExit(input.playoffWins)}` : `${rec} · Missed playoffs`;
 
-  return { score, letter, dimensions: dimensions.map(({ key, label, score }) => ({ key, label, score })), bestMove, worstMove, draftSteal: steal && steal.delta > 2 ? steal : null, capHealth, seasonLine };
+  return {
+    score, letter, dimensions: dimensions.map(({ key, label, score }) => ({ key, label, score })), bestMove, worstMove,
+    draftSteal: steal && steal.delta > 2 ? steal : null, capHealth, seasonLine,
+    benchmark: { real: input.real, verdict, winDiff, depthDiff },
+  };
 }
 
 function playoffExit(wins: number) {

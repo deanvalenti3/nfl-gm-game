@@ -1,7 +1,8 @@
 import type { Position } from "@/domain/types";
 import { userRoster, type Action, type RunState } from "@/engine/game";
 import { buildDepthChart, gradePositions } from "@/engine/roster";
-import { Button, Chevron, Headline, Pill, tierTone } from "@/components/ui";
+import { Button, Chevron, Headline, Pill } from "@/components/ui";
+import { gradeTone, letterFor } from "@/engine/grades";
 
 const CANDIDATES: Position[] = ["QB", "RB", "WR", "TE", "OT", "G", "C", "EDGE", "DT", "LB", "CB", "S"];
 
@@ -31,7 +32,7 @@ export function Needs({ state, dispatch }: { state: RunState; dispatch: (a: Acti
             <span className="display num flex h-10 w-10 items-center justify-center rounded-lg bg-team text-[20px] font-bold text-team-ink">{i + 1}</span>
             <div className="min-w-0 flex-1">
               <div className="display text-[22px] font-bold uppercase leading-none">{pos}</div>
-              <Pill tone={tierTone(gradeOf(pos).tier)} className="mt-1">{gradeOf(pos).tier}</Pill>
+              <Pill tone={gradeTone(letterFor(gradeOf(pos).score))} className="mt-1">Unit grade {letterFor(gradeOf(pos).score)}</Pill>
             </div>
             <div className="flex gap-1">
               <button onClick={() => move(i, -1)} disabled={i === 0} aria-label={`Move ${pos} up`} className="flex h-9 w-9 items-center justify-center rounded-lg bg-sunk text-ink-2 disabled:opacity-25"><Chevron up /></button>

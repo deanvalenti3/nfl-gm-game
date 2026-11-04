@@ -6,6 +6,7 @@ import { LEAGUE_PLAYERS, LEAGUE_PROFILES } from "./league";
 import { PICKS } from "./picks";
 import { PROSPECTS_2025 } from "./prospects";
 import { NE_ROSTER } from "./roster";
+import { STATS_2024 } from "./stats";
 
 const NE_PROFILE: TeamProfile = {
   teamId: "NE",
@@ -30,10 +31,11 @@ export const NE_2025: ScenarioSnapshot = {
     carryover: Math.round(22 * M),
     minRosterForSeason: 46,
     objective: {
-      headline: "Be competitive now. Make the playoffs within two seasons.",
-      targetWins: 8,
+      headline: "Beat the real Patriots. Your season is judged against what New England actually did in 2025.",
+      targetWins: 9,
       playoffsRequired: false,
     },
+    realResult: { w: 14, l: 3, t: 0, playoffDepth: 4, label: "14–3 · AFC East champions · Lost Super Bowl LX" },
     keyProblems: ["OT", "WR", "EDGE", "DT"],
     briefingNotes: [
       "Drake Maye flashed as a rookie behind the league's worst pass protection.",
@@ -81,7 +83,7 @@ export const NE_2025: ScenarioSnapshot = {
   },
   teams: TEAMS,
   profiles: [NE_PROFILE, ...LEAGUE_PROFILES],
-  players: [...NE_ROSTER, ...LEAGUE_PLAYERS, ...FREE_AGENTS],
+  players: [...NE_ROSTER, ...LEAGUE_PLAYERS, ...FREE_AGENTS].map((p) => ({ ...p, stats: STATS_2024[p.id] })),
   picks: PICKS,
   prospects: PROSPECTS_2025,
 };
