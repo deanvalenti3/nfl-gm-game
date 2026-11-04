@@ -16,7 +16,7 @@ export function Report({ state, snapshot, onReplay, onNewTeam }: { state: RunSta
       <Headline kicker={`${team.city} ${team.name} · ${state.year}`}>GM Report</Headline>
       <section className="card anim-pop flex flex-col items-center gap-2 px-6 py-8 text-center">
         <ScoreRing value={r.score} label={`GM Score · ${r.letter}`} />
-        <div className="display text-[22px] font-bold uppercase">{r.seasonLine}</div>
+        <div className="display text-[25px] font-bold uppercase">{r.seasonLine}</div>
       </section>
 
       <section className="card p-5">
@@ -32,29 +32,29 @@ export function Report({ state, snapshot, onReplay, onNewTeam }: { state: RunSta
         {r.bestMove && (
           <div className="card border-up/30 bg-up-soft p-4">
             <div className="label mb-1 text-up">Best move</div>
-            <div className="display text-[18px] font-bold uppercase leading-tight">{r.bestMove.label}</div>
-            <div className="mt-0.5 text-[13px] text-ink-2">{r.bestMove.detail}</div>
+            <div className="display text-[20px] font-bold uppercase leading-tight">{r.bestMove.label}</div>
+            <div className="mt-0.5 text-[15px] text-ink-2">{r.bestMove.detail}</div>
           </div>
         )}
         {r.worstMove && (
           <div className="card border-down/30 bg-down-soft p-4">
             <div className="label mb-1 text-down">Worst move</div>
-            <div className="display text-[18px] font-bold uppercase leading-tight">{r.worstMove.label}</div>
-            <div className="mt-0.5 text-[13px] text-ink-2">{r.worstMove.detail}</div>
+            <div className="display text-[20px] font-bold uppercase leading-tight">{r.worstMove.label}</div>
+            <div className="mt-0.5 text-[15px] text-ink-2">{r.worstMove.detail}</div>
           </div>
         )}
         {r.draftSteal && (
           <div className="card p-4">
             <div className="label mb-1 text-team">Draft steal</div>
-            <div className="display text-[18px] font-bold uppercase leading-tight">{r.draftSteal.label}</div>
-            <div className="mt-0.5 text-[13px] text-ink-2">{r.draftSteal.detail}</div>
+            <div className="display text-[20px] font-bold uppercase leading-tight">{r.draftSteal.label}</div>
+            <div className="mt-0.5 text-[15px] text-ink-2">{r.draftSteal.detail}</div>
           </div>
         )}
         <div className="card p-4">
           <div className="label mb-1">Cap health</div>
           <div className="flex items-center gap-2">
             <Pill tone={r.capHealth === "STRONG" ? "up" : r.capHealth === "HEALTHY" ? "even" : r.capHealth === "TIGHT" ? "risk" : "down"}>{r.capHealth}</Pill>
-            <span className="text-[13px] text-ink-2">{fmtMoney(state.deadMoney[state.teamId] ?? 0)} dead money this year</span>
+            <span className="text-[15px] text-ink-2">{fmtMoney(state.deadMoney[state.teamId] ?? 0)} dead money this year</span>
           </div>
         </div>
       </section>
@@ -62,7 +62,7 @@ export function Report({ state, snapshot, onReplay, onNewTeam }: { state: RunSta
       <section className="card p-4">
         <button onClick={() => setShowLog((v) => !v)} className="flex w-full items-center justify-between">
           <span className="label">Your moves ({mine.length})</span>
-          <span className="display text-[12px] font-bold uppercase text-team">{showLog ? "Hide" : "Show"}</span>
+          <span className="display text-[14px] font-bold uppercase text-team">{showLog ? "Hide" : "Show"}</span>
         </button>
         {showLog && (
           <div className="mt-3">

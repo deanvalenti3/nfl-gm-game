@@ -12,18 +12,18 @@ export function PlayerCard({ player, year, right, onClick, selected, muted, team
   const injured = (player.injuredWeeks ?? 0) > 0;
   const body = (
     <div className={`flex items-center gap-3 ${muted ? "opacity-50" : ""}`}>
-      <div className="display flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sunk text-[13px] font-bold leading-none text-ink-2">
+      <div className="display flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sunk text-[15px] font-bold leading-none text-ink-2">
         {player.pos}
-        <span className="num mt-0.5 text-[10px] font-semibold text-ink-3">{player.age}</span>
+        <span className="num mt-0.5 text-[12px] font-semibold text-ink-3">{player.age}</span>
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-          <span className="truncate text-[15px] font-bold tracking-tight">{player.name}</span>
+          <span className="truncate text-[17px] font-bold tracking-tight">{player.name}</span>
           <Pill tone={tierTone(tier)}>{tier}</Pill>
           {injured && <Pill tone="down">OUT {player.injuredWeeks! >= 18 ? "SZN" : `${player.injuredWeeks}W`}</Pill>}
           {teamLabel && <Pill>{teamLabel}</Pill>}
         </div>
-        <div className="num mt-0.5 text-[12px] text-ink-2">
+        <div className="num mt-0.5 text-[14px] text-ink-2">
           {c ? (
             <>
               {fmtMoney(hit)} cap · {yearsLeft} yr{yearsLeft === 1 ? "" : "s"} left · {fmtMoney(c.totalValue / (c.endYear - c.startYear + 1))}/yr

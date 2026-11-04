@@ -42,15 +42,15 @@ export function Audit({ state, snapshot, dispatch }: { state: RunState; snapshot
         <Stat label="Rookie reserve" value={fmtMoney(cap.cap - cap.committed - cap.deadMoney - cap.space)} sub="held for the draft class" />
       </div>
       <PlayerCard player={player} year={state.year} />
-      <p className="text-[15px] leading-snug text-ink-2">{decision.context}</p>
+      <p className="text-[17px] leading-snug text-ink-2">{decision.context}</p>
 
       <div role="radiogroup" className="stagger grid gap-2.5" style={{ gridTemplateColumns: `repeat(${decision.options.filter((o) => o !== "RESTRUCTURE").length}, minmax(0,1fr))` }}>
         {decision.options.filter((o): o is Choice => o !== "RESTRUCTURE").map((o) => {
           const sel = picked === o;
           return (
-            <button key={o} role="radio" aria-checked={sel} disabled={locked && !sel} onClick={() => !locked && setPicked(o)} className={`card display px-3 py-4 text-center text-[17px] font-bold uppercase tracking-wide transition-[border-color,transform] active:scale-[0.98] ${sel ? "border-team ring-2 ring-team/50" : "hover:border-line-strong"} ${locked && !sel ? "opacity-40" : ""}`}>
+            <button key={o} role="radio" aria-checked={sel} disabled={locked && !sel} onClick={() => !locked && setPicked(o)} className={`card display px-3 py-4 text-center text-[19px] font-bold uppercase tracking-wide transition-[border-color,transform] active:scale-[0.98] ${sel ? "border-team ring-2 ring-team/50" : "hover:border-line-strong"} ${locked && !sel ? "opacity-40" : ""}`}>
               {LABEL[o]}
-              <div className="num mt-1 text-[12px] font-semibold text-ink-3">{o === "CUT" ? `${savings >= 0 ? "+" : ""}${fmtMoney(savings)}` : o === "KEEP" ? fmtMoney(hit) : "Shop"}</div>
+              <div className="num mt-1 text-[14px] font-semibold text-ink-3">{o === "CUT" ? `${savings >= 0 ? "+" : ""}${fmtMoney(savings)}` : o === "KEEP" ? fmtMoney(hit) : "Shop"}</div>
             </button>
           );
         })}

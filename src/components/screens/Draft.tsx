@@ -69,14 +69,14 @@ export function Draft({ state, snapshot, dispatch }: { state: RunState; snapshot
         <section className="card p-4">
           <div className="mb-2 flex items-center justify-between">
             <div className="label">Draft ticker</div>
-            {recent.length > 12 && <span className="num text-[11px] text-ink-3">+{recent.length - 12} earlier</span>}
+            {recent.length > 12 && <span className="num text-[13px] text-ink-3">+{recent.length - 12} earlier</span>}
           </div>
           <ol className="flex flex-col gap-1.5">
             {[...recent].reverse().slice(0, 12).map((l, i) => {
               const p = state.players[l.playerId];
               return (
-                <li key={l.pickId} className={`flex items-center gap-3 text-[14px] ${i === 0 ? "anim-slide" : ""} ${l.teamId === state.teamId ? "text-team" : ""}`}>
-                  <span className="display num w-10 shrink-0 text-right text-[16px] font-bold">{l.overall}</span>
+                <li key={l.pickId} className={`flex items-center gap-3 text-[16px] ${i === 0 ? "anim-slide" : ""} ${l.teamId === state.teamId ? "text-team" : ""}`}>
+                  <span className="display num w-10 shrink-0 text-right text-[18px] font-bold">{l.overall}</span>
                   <span className="display w-10 shrink-0 font-bold uppercase text-ink-2">{l.teamId}</span>
                   <span className="truncate font-semibold">{p.name}</span>
                   <span className="text-ink-3">{p.pos} · {p.college}</span>
@@ -91,7 +91,7 @@ export function Draft({ state, snapshot, dispatch }: { state: RunState; snapshot
         <>
           <div className="flex flex-wrap gap-1.5">
             {positions.map((pos) => (
-              <button key={pos} onClick={() => setFilter(pos)} className={`display rounded-md px-2 py-1 text-[12px] font-bold uppercase tracking-wide ${filter === pos ? "bg-team text-team-ink" : "bg-sunk text-ink-2"}`}>{pos}</button>
+              <button key={pos} onClick={() => setFilter(pos)} className={`display rounded-md px-2 py-1 text-[14px] font-bold uppercase tracking-wide ${filter === pos ? "bg-team text-team-ink" : "bg-sunk text-ink-2"}`}>{pos}</button>
             ))}
           </div>
           <div role="radiogroup" className="stagger flex flex-col gap-2">
@@ -129,7 +129,7 @@ export function Draft({ state, snapshot, dispatch }: { state: RunState; snapshot
               <Stat label="Athletic profile" value={sel.athletic} />
               <Stat label="Production" value={sel.production} />
             </div>
-            <div className="text-[13px] text-ink-3">Team need fit: <span className="font-bold text-ink">{needFit(profile, roster, sel.pos)}</span>{snapshot.scenario.prospectNotes?.[sel.id] ? ` · ${snapshot.scenario.prospectNotes[sel.id]}` : ""}</div>
+            <div className="text-[15px] text-ink-3">Team need fit: <span className="font-bold text-ink">{needFit(profile, roster, sel.pos)}</span>{snapshot.scenario.prospectNotes?.[sel.id] ? ` · ${snapshot.scenario.prospectNotes[sel.id]}` : ""}</div>
             <Button size="lg" full onClick={() => { dispatch({ type: "DRAFT_SELECT", prospectId: sel.id }); setSelected(null); }}>Draft {sel.name}</Button>
           </div>
         )}
@@ -143,20 +143,20 @@ function ProspectRow({ prospect: p, fit, selected, onClick, needs }: { prospect:
   return (
     <button type="button" role="radio" aria-checked={selected} onClick={onClick} className={`card w-full px-3 py-2.5 text-left transition-[border-color] active:scale-[0.99] ${selected ? "border-team ring-2 ring-team/50" : "hover:border-line-strong"}`}>
       <div className="flex items-center gap-3">
-        <div className="display flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sunk text-[13px] font-bold leading-none text-ink-2">
+        <div className="display flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-lg bg-sunk text-[15px] font-bold leading-none text-ink-2">
           {p.pos}
-          <span className={`mt-0.5 text-[11px] ${p.grade.startsWith("A") ? "text-up" : p.grade.startsWith("B") ? "text-even" : "text-ink-3"}`}>{p.grade}</span>
+          <span className={`mt-0.5 text-[13px] ${p.grade.startsWith("A") ? "text-up" : p.grade.startsWith("B") ? "text-even" : "text-ink-3"}`}>{p.grade}</span>
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-            <span className="truncate text-[15px] font-bold tracking-tight">{p.name}</span>
-            <span className="text-[12px] text-ink-3">{p.school} · {p.age}</span>
+            <span className="truncate text-[17px] font-bold tracking-tight">{p.name}</span>
+            <span className="text-[14px] text-ink-3">{p.school} · {p.age}</span>
           </div>
-          <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[12px]">
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[14px]">
             <span className="num text-ink-2">Proj. {p.projectedRange[0]}–{p.projectedRange[1]}</span>
-            <Pill tone={p.athletic === "ELITE" ? "up" : "neutral"} className="text-[10px]">ATH {p.athletic}</Pill>
-            <Pill tone={p.production === "ELITE" ? "up" : "neutral"} className="text-[10px]">PROD {p.production}</Pill>
-            <Pill tone={p.risk === "HIGH" ? "down" : p.risk === "MEDIUM" ? "risk" : "neutral"} className="text-[10px]">RISK {p.risk}</Pill>
+            <Pill tone={p.athletic === "ELITE" ? "up" : "neutral"} className="text-[12px]">ATH {p.athletic}</Pill>
+            <Pill tone={p.production === "ELITE" ? "up" : "neutral"} className="text-[12px]">PROD {p.production}</Pill>
+            <Pill tone={p.risk === "HIGH" ? "down" : p.risk === "MEDIUM" ? "risk" : "neutral"} className="text-[12px]">RISK {p.risk}</Pill>
           </div>
         </div>
         <Pill tone={needIdx === 0 || fit === "STRONG" ? "up" : fit === "FIT" ? "even" : "neutral"}>{needIdx >= 0 ? `Need #${needIdx + 1}` : fit}</Pill>

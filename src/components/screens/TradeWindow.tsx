@@ -43,12 +43,12 @@ export function TradeWindow({ state, snapshot, dispatch }: { state: RunState; sn
 
       <section className="stagger grid gap-2.5 sm:grid-cols-2">
         <button onClick={() => setBuilding({ give: [] })} className="card p-5 text-left hover:border-line-strong active:scale-[0.99]">
-          <div className="display text-[22px] font-bold uppercase leading-none">Open the trade builder</div>
-          <div className="mt-1 text-[14px] text-ink-2">Pick a partner, build a package from players and picks, read their interest before you submit.</div>
+          <div className="display text-[25px] font-bold uppercase leading-none">Open the trade builder</div>
+          <div className="mt-1 text-[16px] text-ink-2">Pick a partner, build a package from players and picks, read their interest before you submit.</div>
         </button>
         <button onClick={() => dispatch({ type: "TRADE_DONE" })} className="card p-5 text-left hover:border-line-strong active:scale-[0.99]">
-          <div className="display text-[22px] font-bold uppercase leading-none">Go to the draft</div>
-          <div className="mt-1 text-[14px] text-ink-2">You can still trade picks while you're on the clock.</div>
+          <div className="display text-[25px] font-bold uppercase leading-none">Go to the draft</div>
+          <div className="mt-1 text-[16px] text-ink-2">You can still trade picks while you're on the clock.</div>
         </button>
       </section>
 

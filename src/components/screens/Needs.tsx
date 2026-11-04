@@ -28,9 +28,9 @@ export function Needs({ state, dispatch }: { state: RunState; dispatch: (a: Acti
       <ol className="flex flex-col gap-2">
         {ranked.map((pos, i) => (
           <li key={pos} className="card flex items-center gap-3 px-3 py-2.5">
-            <span className="display num flex h-10 w-10 items-center justify-center rounded-lg bg-team text-[18px] font-bold text-team-ink">{i + 1}</span>
+            <span className="display num flex h-10 w-10 items-center justify-center rounded-lg bg-team text-[20px] font-bold text-team-ink">{i + 1}</span>
             <div className="min-w-0 flex-1">
-              <div className="display text-[20px] font-bold uppercase leading-none">{pos}</div>
+              <div className="display text-[22px] font-bold uppercase leading-none">{pos}</div>
               <Pill tone={tierTone(gradeOf(pos).tier)} className="mt-1">{gradeOf(pos).tier}</Pill>
             </div>
             <div className="flex gap-1">
@@ -45,7 +45,7 @@ export function Needs({ state, dispatch }: { state: RunState; dispatch: (a: Acti
         <div className="label mb-2">Add a position{ranked.length >= 3 ? " (replaces #3)" : ""}</div>
         <div className="flex flex-wrap gap-1.5">
           {rest.map((pos) => (
-            <button key={pos} onClick={() => set(ranked.length >= 3 ? [...ranked.slice(0, 2), pos] : [...ranked, pos])} className="card display flex items-center gap-2 px-3 py-1.5 text-[14px] font-bold uppercase tracking-wide hover:border-line-strong">
+            <button key={pos} onClick={() => set(ranked.length >= 3 ? [...ranked.slice(0, 2), pos] : [...ranked, pos])} className="card display flex items-center gap-2 px-3 py-1.5 text-[16px] font-bold uppercase tracking-wide hover:border-line-strong">
               {pos}
               <span className={`h-2 w-2 rounded-full ${gradeOf(pos).score < 65 ? "bg-down" : gradeOf(pos).score < 74 ? "bg-risk" : "bg-up"}`} />
             </button>

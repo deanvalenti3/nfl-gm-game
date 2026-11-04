@@ -48,19 +48,19 @@ export function Game({ snapshot, initial, onExit }: { snapshot: ScenarioSnapshot
         <div className="hairline" />
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <button onClick={onExit} aria-label="Home" className="display flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[14px] font-bold text-white" style={{ background: team.colors.primary }}>
+            <button onClick={onExit} aria-label="Home" className="display flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[16px] font-bold text-white" style={{ background: team.colors.primary }}>
               {team.abbr}
             </button>
             <div className="min-w-0">
               <div className="label truncate">{snapshot.scenario.title}</div>
-              <div className="display truncate text-[16px] font-bold uppercase leading-none tracking-wide">{phaseTitle(state.phase)}</div>
+              <div className="display truncate text-[18px] font-bold uppercase leading-none tracking-wide">{phaseTitle(state.phase)}</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             {inRun && (
               <button onClick={() => setShowRoster(true)} className="hidden items-center gap-2 rounded-lg bg-sunk px-3 py-1.5 sm:flex">
                 <span className="label">Cap</span>
-                <span className={`display num text-[16px] font-bold ${cap.space < 0 ? "text-down" : "text-up"}`}>{fmtMoney(cap.space, { decimals: 1 })}</span>
+                <span className={`display num text-[18px] font-bold ${cap.space < 0 ? "text-down" : "text-up"}`}>{fmtMoney(cap.space, { decimals: 1 })}</span>
               </button>
             )}
             <button onClick={() => setShowFeed(true)} className="rounded-lg bg-sunk px-3 py-1.5 lg:hidden" aria-label="League feed">

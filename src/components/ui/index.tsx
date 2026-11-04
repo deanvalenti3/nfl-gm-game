@@ -11,7 +11,7 @@ const variants: Record<Variant, string> = {
   ghost: "bg-transparent text-ink-2 hover:text-ink hover:bg-sunk",
   danger: "bg-down-soft text-down border border-down/30 hover:bg-down/20",
 };
-const sizes: Record<Size, string> = { sm: "h-9 px-3 text-[13px]", md: "h-11 px-5 text-[15px]", lg: "h-14 px-7 text-[18px]" };
+const sizes: Record<Size, string> = { sm: "h-10 px-3.5 text-[15px]", md: "h-12 px-5 text-[17px]", lg: "h-14 px-7 text-[20px]" };
 
 export function Button({ variant = "primary", size = "md", full = false, className = "", children, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size; full?: boolean; children: ReactNode }) {
   return (
@@ -32,7 +32,7 @@ const tones: Record<Tone, string> = {
 };
 
 export function Pill({ children, tone = "neutral", className = "" }: { children: ReactNode; tone?: Tone; className?: string }) {
-  return <span className={`display inline-flex items-center rounded-md px-2 py-0.5 text-[12px] font-bold uppercase tracking-[0.1em] ${tones[tone]} ${className}`}>{children}</span>;
+  return <span className={`display inline-flex items-center rounded-md px-2 py-0.5 text-[15px] font-bold uppercase tracking-[0.08em] ${tones[tone]} ${className}`}>{children}</span>;
 }
 
 export function tierTone(tier: Tier): Tone {
@@ -51,8 +51,8 @@ export function Stat({ label, value, sub, tone, size = "md" }: { label: string; 
   return (
     <div className="card px-4 py-3">
       <div className="label">{label}</div>
-      <div className={`display num mt-0.5 font-bold leading-none ${size === "lg" ? "text-[34px]" : "text-[24px]"} ${color}`}>{value}</div>
-      {sub && <div className="mt-1 text-[12px] leading-snug text-ink-2">{sub}</div>}
+      <div className={`display num mt-0.5 font-bold leading-none ${size === "lg" ? "text-[38px]" : "text-[27px]"} ${color}`}>{value}</div>
+      {sub && <div className="mt-1 text-[14px] leading-snug text-ink-2">{sub}</div>}
     </div>
   );
 }
@@ -70,8 +70,8 @@ export function Headline({ children, kicker, sub }: { children: ReactNode; kicke
   return (
     <div>
       {kicker && <div className="label mb-1 text-team">{kicker}</div>}
-      <h1 className="display text-[30px] font-bold uppercase leading-[0.95] tracking-tight sm:text-[40px]">{children}</h1>
-      {sub && <p className="mt-2 max-w-prose text-[15px] leading-snug text-ink-2">{sub}</p>}
+      <h1 className="display text-[34px] font-bold uppercase leading-[0.95] tracking-tight sm:text-[44px]">{children}</h1>
+      {sub && <p className="mt-2 max-w-prose text-[17px] leading-snug text-ink-2">{sub}</p>}
     </div>
   );
 }
@@ -81,8 +81,8 @@ export function Callout({ tone = "even", title, detail }: { tone?: Tone; title: 
   const ring = tone === "up" ? "border-up/40 bg-up-soft" : tone === "down" ? "border-down/40 bg-down-soft" : tone === "risk" ? "border-risk/40 bg-risk-soft" : tone === "team" ? "border-team/40 bg-team-soft" : "border-even/40 bg-even-soft";
   return (
     <div className={`anim-pop rounded-xl border px-4 py-3 ${ring}`}>
-      <div className="display text-[17px] font-bold uppercase tracking-wide">{title}</div>
-      {detail && <div className="mt-0.5 text-[14px] leading-snug text-ink-2">{detail}</div>}
+      <div className="display text-[19px] font-bold uppercase tracking-wide">{title}</div>
+      {detail && <div className="mt-0.5 text-[16px] leading-snug text-ink-2">{detail}</div>}
     </div>
   );
 }
@@ -92,8 +92,8 @@ export function Bar({ label, value, delay = 0, tone = "team" }: { label: string;
   return (
     <div>
       <div className="mb-1 flex items-baseline justify-between">
-        <span className="text-[13px] font-semibold">{label}</span>
-        <span className="num text-[13px] font-bold">{Math.round(value)}</span>
+        <span className="text-[15px] font-semibold">{label}</span>
+        <span className="num text-[15px] font-bold">{Math.round(value)}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-sunk">
         <div className={`anim-grow h-full rounded-full ${color}`} style={{ width: `${Math.max(2, Math.min(100, value))}%`, animationDelay: `${delay}ms` }} />
@@ -114,7 +114,7 @@ export function ScoreRing({ value, label, size = 170 }: { value: number; label?:
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--team)" strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} style={{ "--ring-start": c, "--ring-end": end, strokeDashoffset: end, animation: "ring 1.1s cubic-bezier(0.2,0.7,0.2,1) both" } as React.CSSProperties} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="display num text-[56px] font-bold leading-none">{value}</span>
+        <span className="display num text-[60px] font-bold leading-none">{value}</span>
         {label && <span className="label mt-1">{label}</span>}
       </div>
     </div>
@@ -127,7 +127,7 @@ export function Sheet({ open, onClose, title, children, wide = false }: { open: 
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-6" onClick={onClose} role="dialog" aria-modal>
       <div className={`anim-pop max-h-[92dvh] w-full overflow-y-auto rounded-t-2xl border border-line bg-elev p-5 shadow-lift sm:rounded-2xl ${wide ? "sm:max-w-4xl" : "sm:max-w-xl"}`} onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-start justify-between gap-3">
-          <div className="display text-[22px] font-bold uppercase leading-none tracking-wide">{title}</div>
+          <div className="display text-[25px] font-bold uppercase leading-none tracking-wide">{title}</div>
           <button onClick={onClose} aria-label="Close" className="flex h-8 w-8 items-center justify-center rounded-lg bg-sunk text-ink-2 hover:text-ink">
             ×
           </button>

@@ -59,7 +59,7 @@ export function Season({ state, snapshot, dispatch }: { state: RunState; snapsho
 
       <section className="card p-4">
         <div className="label mb-2">Results</div>
-        {myGames.length === 0 && <div className="text-[14px] text-ink-3">Kickoff is next.</div>}
+        {myGames.length === 0 && <div className="text-[16px] text-ink-3">Kickoff is next.</div>}
         <ol className="flex flex-col divide-y divide-line">
           {myGames.map((g, i) => {
             const home = g.homeId === state.teamId;
@@ -70,8 +70,8 @@ export function Season({ state, snapshot, dispatch }: { state: RunState; snapsho
             return (
               <li key={g.week} className={`flex items-center gap-3 py-2 ${i === 0 ? "anim-slide" : ""}`}>
                 <span className="label w-12">Wk {g.week}</span>
-                <span className={`display w-7 text-[16px] font-bold ${won ? "text-up" : us === them ? "text-ink-3" : "text-down"}`}>{won ? "W" : us === them ? "T" : "L"}</span>
-                <span className="display flex-1 text-[17px] font-bold uppercase tracking-wide">
+                <span className={`display w-7 text-[18px] font-bold ${won ? "text-up" : us === them ? "text-ink-3" : "text-down"}`}>{won ? "W" : us === them ? "T" : "L"}</span>
+                <span className="display flex-1 text-[19px] font-bold uppercase tracking-wide">
                   {home ? "" : "@ "}{opp} <span className="num text-ink-2">{them}</span>
                   <span className="mx-2 text-ink-3">—</span>
                   {state.teamId} <span className="num">{us}</span>
@@ -101,7 +101,7 @@ export function Standings({ state, snapshot, conferenceOnly = false }: { state: 
             <div className="label mb-2">{team.conference} {d}</div>
             <ol className="flex flex-col gap-1">
               {ranked.map((id) => (
-                <li key={id} className={`flex items-center justify-between text-[14px] ${id === state.teamId ? "font-bold text-team" : ""}`}>
+                <li key={id} className={`flex items-center justify-between text-[16px] ${id === state.teamId ? "font-bold text-team" : ""}`}>
                   <span className="display uppercase tracking-wide">{snapshot.teams.find((t) => t.id === id)?.name}</span>
                   <span className="num">{st[id].w}–{st[id].l}{st[id].t ? `–${st[id].t}` : ""}</span>
                 </li>

@@ -30,14 +30,14 @@ export function Roster({ state, snapshot, dispatch, inSeason = false }: { state:
     const p = byId[chart.starters[key] ?? ""];
     return (
       <button onClick={() => !inSeason && setEditing(key)} className={`flex items-center gap-2 rounded-lg border border-line bg-elev px-2.5 py-2 text-left ${inSeason ? "" : "hover:border-line-strong"}`}>
-        <span className="display w-9 shrink-0 text-[13px] font-bold text-ink-3">{slot.pos}{slot.count > 1 ? i : ""}</span>
+        <span className="display w-9 shrink-0 text-[15px] font-bold text-ink-3">{slot.pos}{slot.count > 1 ? i : ""}</span>
         {p ? (
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[14px] font-semibold">{p.name}</span>
-            <span className={`display text-[10px] font-bold uppercase tracking-wide ${tierTone(tierFor(p.ability.ovr)) === "up" ? "text-up" : tierTone(tierFor(p.ability.ovr)) === "down" ? "text-down" : "text-ink-3"}`}>{tierFor(p.ability.ovr)}{(p.injuredWeeks ?? 0) > 0 ? " · OUT" : ""}</span>
+            <span className="block truncate text-[16px] font-semibold">{p.name}</span>
+            <span className={`display text-[12px] font-bold uppercase tracking-wide ${tierTone(tierFor(p.ability.ovr)) === "up" ? "text-up" : tierTone(tierFor(p.ability.ovr)) === "down" ? "text-down" : "text-ink-3"}`}>{tierFor(p.ability.ovr)}{(p.injuredWeeks ?? 0) > 0 ? " · OUT" : ""}</span>
           </span>
         ) : (
-          <span className="text-[13px] text-down">Empty</span>
+          <span className="text-[15px] text-down">Empty</span>
         )}
       </button>
     );
@@ -57,15 +57,15 @@ export function Roster({ state, snapshot, dispatch, inSeason = false }: { state:
       <section className="grid gap-2.5 sm:grid-cols-3">
         <div className="card p-4">
           <div className="label mb-1.5 text-up">Strengths</div>
-          <div className="flex flex-wrap gap-1.5">{strengths.length ? strengths.map((g) => <Pill key={g.pos} tone="up">{g.pos}</Pill>) : <span className="text-[13px] text-ink-3">No elite units</span>}</div>
+          <div className="flex flex-wrap gap-1.5">{strengths.length ? strengths.map((g) => <Pill key={g.pos} tone="up">{g.pos}</Pill>) : <span className="text-[15px] text-ink-3">No elite units</span>}</div>
         </div>
         <div className="card p-4">
           <div className="label mb-1.5 text-down">Weaknesses</div>
-          <div className="flex flex-wrap gap-1.5">{weaknesses.length ? weaknesses.map((g) => <Pill key={g.pos} tone="down">{g.pos}</Pill>) : <span className="text-[13px] text-ink-3">None glaring</span>}</div>
+          <div className="flex flex-wrap gap-1.5">{weaknesses.length ? weaknesses.map((g) => <Pill key={g.pos} tone="down">{g.pos}</Pill>) : <span className="text-[15px] text-ink-3">None glaring</span>}</div>
         </div>
         <div className="card p-4">
           <div className="label mb-1.5 text-risk">Depth concerns</div>
-          <div className="flex flex-wrap gap-1.5">{depthConcerns.length ? depthConcerns.map((p) => <Pill key={p} tone="risk">{p}</Pill>) : <span className="text-[13px] text-ink-3">Solid</span>}</div>
+          <div className="flex flex-wrap gap-1.5">{depthConcerns.length ? depthConcerns.map((p) => <Pill key={p} tone="risk">{p}</Pill>) : <span className="text-[15px] text-ink-3">Solid</span>}</div>
         </div>
       </section>
 
@@ -87,7 +87,7 @@ export function Roster({ state, snapshot, dispatch, inSeason = false }: { state:
             <Button variant="secondary" size="lg" onClick={() => setShowFa(true)}>Add a free agent</Button>
             <Button size="lg" full disabled={tooFew} onClick={() => dispatch({ type: "START_SEASON" })}>Start season</Button>
           </div>
-          {tooFew && <p className="text-[13px] text-down">You need at least {snapshot.scenario.minRosterForSeason} players to start the season.</p>}
+          {tooFew && <p className="text-[15px] text-down">You need at least {snapshot.scenario.minRosterForSeason} players to start the season.</p>}
         </>
       )}
 
@@ -102,12 +102,12 @@ export function Roster({ state, snapshot, dispatch, inSeason = false }: { state:
       </Sheet>
 
       <Sheet open={showFa} onClose={() => setShowFa(false)} title="Remaining free agents">
-        <div className="mb-3 text-[13px] text-ink-2">Leftover free agents sign for their asking price immediately.</div>
+        <div className="mb-3 text-[15px] text-ink-2">Leftover free agents sign for their asking price immediately.</div>
         <div className="flex flex-col gap-1.5">
           {cheapFa.map((p) => (
             <PlayerCard key={p.id} player={p} year={state.year} right={<Button size="sm" onClick={() => dispatch({ type: "FA_OFFER", offer: { playerId: p.id, teamId: state.teamId, years: p.market!.years, aav: p.market!.aav, guaranteedPct: p.market!.guaranteedPct } })}>Sign {fmtMoney(p.market!.aav)}</Button>} />
           ))}
-          {!cheapFa.length && <div className="text-[13px] text-ink-3">Nobody you can afford.</div>}
+          {!cheapFa.length && <div className="text-[15px] text-ink-3">Nobody you can afford.</div>}
         </div>
       </Sheet>
     </div>

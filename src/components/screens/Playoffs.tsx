@@ -35,7 +35,7 @@ export function Playoffs({ state, snapshot, dispatch }: { state: RunState; snaps
               const hw = res.homeScore > res.awayScore;
               const mine = g.homeId === state.teamId || g.awayId === state.teamId;
               return (
-                <li key={g.id} className={`flex items-center gap-2 py-2 text-[15px] ${mine ? "text-team" : ""}`}>
+                <li key={g.id} className={`flex items-center gap-2 py-2 text-[17px] ${mine ? "text-team" : ""}`}>
                   <Pill className="w-10 justify-center">{g.conference === "SB" ? "SB" : g.conference}</Pill>
                   <span className={`display flex-1 uppercase tracking-wide ${!hw ? "font-bold" : "text-ink-2"}`}>{name(g.awayId)} <span className="num">{res.awayScore}</span></span>
                   <span className="text-ink-3">@</span>

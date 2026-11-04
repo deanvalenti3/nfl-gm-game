@@ -54,16 +54,16 @@ export function Deadline({ state, snapshot, dispatch }: { state: RunState; snaps
 
       <div role="radiogroup" className="stagger grid gap-2.5 sm:grid-cols-3">
         <button onClick={() => setMode({ give: [], partner: sellers[0] })} className="card p-4 text-left hover:border-line-strong active:scale-[0.99]">
-          <div className="display text-[22px] font-bold uppercase leading-none">Buy</div>
-          <div className="mt-1 text-[13px] text-ink-2">Shop a {weak[0].pos}. Sellers right now: {sellers.slice(0, 5).join(", ")}{sellers.length > 5 ? "…" : ""}</div>
+          <div className="display text-[25px] font-bold uppercase leading-none">Buy</div>
+          <div className="mt-1 text-[15px] text-ink-2">Shop a {weak[0].pos}. Sellers right now: {sellers.slice(0, 5).join(", ")}{sellers.length > 5 ? "…" : ""}</div>
         </button>
         <button onClick={() => setMode({ give: expiringVets[0] ? [{ type: "PLAYER", id: expiringVets[0].id }] : [], partner: buyers[0] })} className="card p-4 text-left hover:border-line-strong active:scale-[0.99]">
-          <div className="display text-[22px] font-bold uppercase leading-none">Sell</div>
-          <div className="mt-1 text-[13px] text-ink-2">{expiringVets.length ? `${expiringVets[0].name} is on an expiring deal. Buyers: ${buyers.slice(0, 4).join(", ")}` : `Move a veteran for picks. Buyers: ${buyers.slice(0, 4).join(", ")}`}</div>
+          <div className="display text-[25px] font-bold uppercase leading-none">Sell</div>
+          <div className="mt-1 text-[15px] text-ink-2">{expiringVets.length ? `${expiringVets[0].name} is on an expiring deal. Buyers: ${buyers.slice(0, 4).join(", ")}` : `Move a veteran for picks. Buyers: ${buyers.slice(0, 4).join(", ")}`}</div>
         </button>
         <button onClick={() => dispatch({ type: "DEADLINE_DONE" })} className="card p-4 text-left hover:border-line-strong active:scale-[0.99]">
-          <div className="display text-[22px] font-bold uppercase leading-none">Stand pat</div>
-          <div className="mt-1 text-[13px] text-ink-2">Ride the roster you built. Simulate the rest of the season.</div>
+          <div className="display text-[25px] font-bold uppercase leading-none">Stand pat</div>
+          <div className="mt-1 text-[15px] text-ink-2">Ride the roster you built. Simulate the rest of the season.</div>
         </button>
       </div>
 

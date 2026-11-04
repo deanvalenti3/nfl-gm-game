@@ -8,8 +8,8 @@
   --bg-elev: #12151c;
   --bg-sunk: #07090d;
   --ink: #f3f4f6;
-  --ink-2: #a3a8b4;
-  --ink-3: #6b7180;
+  --ink-2: #bfc4ce;
+  --ink-3: #8f95a3;
   --line: #1f2430;
   --line-strong: #2f3645;
 
@@ -79,6 +79,8 @@ html {
 }
 body {
   font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.45;
   min-height: 100dvh;
   overscroll-behavior-y: none;
 }
@@ -109,8 +111,8 @@ button,
   font-family: var(--font-display);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-size: 14px;
   color: var(--ink-3);
 }
 .card {

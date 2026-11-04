@@ -49,7 +49,7 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
           {last.map((r, i) => {
             const l = resolutionLine(r);
             return (
-              <div key={i} className={`flex gap-2 text-[14px] ${l.tone === "up" ? "text-up" : l.tone === "down" ? "text-down" : "text-risk"}`}>
+              <div key={i} className={`flex gap-2 text-[16px] ${l.tone === "up" ? "text-up" : l.tone === "down" ? "text-down" : "text-risk"}`}>
                 <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
                 <span>{l.text}</span>
               </div>
@@ -67,7 +67,7 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
               <div key={ask.playerId} className="card border-risk/40 p-3">
                 <PlayerCard player={p} year={state.year} />
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-[14px]">
+                  <div className="text-[16px]">
                     Asking <span className="num font-bold">{fmtMoney(ask.aav)}/yr</span> × {ask.years}, {Math.round(ask.guaranteedPct * 100)}% guaranteed{rival ? ` · ${teamName(rival)} is in` : ""}
                   </div>
                   <div className="flex gap-2">
@@ -85,12 +85,12 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
       <section className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <div className="label">{showAll ? "All free agents" : "Your shortlist"}</div>
-          <button onClick={() => setShowAll((v) => !v)} className="display text-[12px] font-bold uppercase tracking-wide text-team">{showAll ? "Back to shortlist" : `View all ${pool.length}`}</button>
+          <button onClick={() => setShowAll((v) => !v)} className="display text-[14px] font-bold uppercase tracking-wide text-team">{showAll ? "Back to shortlist" : `View all ${pool.length}`}</button>
         </div>
         {showAll && (
           <div className="flex flex-wrap gap-1.5">
             {positions.map((pos) => (
-              <button key={pos} onClick={() => setFilter(pos)} className={`display rounded-md px-2 py-1 text-[12px] font-bold uppercase tracking-wide ${filter === pos ? "bg-team text-team-ink" : "bg-sunk text-ink-2"}`}>{pos}</button>
+              <button key={pos} onClick={() => setFilter(pos)} className={`display rounded-md px-2 py-1 text-[14px] font-bold uppercase tracking-wide ${filter === pos ? "bg-team text-team-ink" : "bg-sunk text-ink-2"}`}>{pos}</button>
             ))}
           </div>
         )}
@@ -98,7 +98,7 @@ export function FreeAgency({ state, snapshot, dispatch }: { state: RunState; sna
           {(showAll ? allList : list).map((p) => (
             <FreeAgentRow key={p.id} player={p} state={state} offer={state.fa.offers[p.id]} needRank={state.needs.indexOf(p.pos)} onOffer={() => setOffering(p)} onPass={() => dispatch({ type: "FA_PASS", playerId: p.id })} onWithdraw={() => dispatch({ type: "FA_WITHDRAW", playerId: p.id })} />
           ))}
-          {!showAll && list.length === 0 && <div className="text-[14px] text-ink-3">Nothing left on the shortlist. View all, or move on.</div>}
+          {!showAll && list.length === 0 && <div className="text-[16px] text-ink-3">Nothing left on the shortlist. View all, or move on.</div>}
         </div>
       </section>
 
@@ -125,12 +125,12 @@ function FreeAgentRow({ player, state, offer, needRank, onOffer, onPass, onWithd
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <Pill tone={m.interest === "HIGH" ? "down" : m.interest === "MEDIUM" ? "risk" : "neutral"}>Market: {m.interest}</Pill>
         <Pill tone={fit === "EXCELLENT" ? "up" : fit === "GOOD" ? "even" : "neutral"}>Fit: {fit}</Pill>
-        <span className="num ml-auto text-[12px] text-ink-2">Proj. {m.years} yr / {fmtMoney(m.aav * m.years)}</span>
+        <span className="num ml-auto text-[14px] text-ink-2">Proj. {m.years} yr / {fmtMoney(m.aav * m.years)}</span>
       </div>
       <div className="mt-2.5 flex gap-2">
         {offer ? (
           <>
-            <div className="num flex-1 self-center text-[13px] text-team">Offer out: {offer.years} yr × {fmtMoney(offer.aav)} · {Math.round(offer.guaranteedPct * 100)}% gtd</div>
+            <div className="num flex-1 self-center text-[15px] text-team">Offer out: {offer.years} yr × {fmtMoney(offer.aav)} · {Math.round(offer.guaranteedPct * 100)}% gtd</div>
             <Button size="sm" variant="ghost" onClick={onWithdraw}>Withdraw</Button>
             <Button size="sm" variant="secondary" onClick={onOffer}>Edit</Button>
           </>
@@ -187,7 +187,7 @@ function Slider({ label, value, min, max, step, onChange, format }: { label: str
     <label className="flex flex-col gap-1">
       <div className="flex items-baseline justify-between">
         <span className="label">{label}</span>
-        <span className="display num text-[18px] font-bold">{format(value)}</span>
+        <span className="display num text-[20px] font-bold">{format(value)}</span>
       </div>
       <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} className="h-2 w-full cursor-pointer accent-[var(--team)]" />
     </label>

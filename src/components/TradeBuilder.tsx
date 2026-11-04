@@ -40,7 +40,7 @@ export function TradeBuilder({ state, dispatch, snapshot, initialPartner, initia
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <label className="label">Trade partner</label>
-        <select value={partner} onChange={(e) => { setPartner(e.target.value); setGet([]); dispatch({ type: "TRADE_CLEAR" }); }} className="display h-10 rounded-lg border border-line-strong bg-sunk px-3 text-[15px] font-bold uppercase tracking-wide">
+        <select value={partner} onChange={(e) => { setPartner(e.target.value); setGet([]); dispatch({ type: "TRADE_CLEAR" }); }} className="display h-10 rounded-lg border border-line-strong bg-sunk px-3 text-[17px] font-bold uppercase tracking-wide">
           <option value="">Select a team</option>
           {teams.map((t) => (
             <option key={t.id} value={t.id}>{t.id} · {t.name}</option>
@@ -51,7 +51,7 @@ export function TradeBuilder({ state, dispatch, snapshot, initialPartner, initia
             <Pill tone={profile.status === "CONTENDER" || profile.status === "PLAYOFF TEAM" ? "up" : profile.status === "REBUILDING" ? "down" : "neutral"}>{profile.status}</Pill>
             <Pill>QB: {profile.qb}</Pill>
             <Pill>Cap {fmtMoney(profile.capSpace)}</Pill>
-            <span className="text-[12px] text-ink-3">Needs: {profile.needs.join(" · ")}</span>
+            <span className="text-[14px] text-ink-3">Needs: {profile.needs.join(" · ")}</span>
           </>
         )}
       </div>
@@ -60,12 +60,12 @@ export function TradeBuilder({ state, dispatch, snapshot, initialPartner, initia
         <>
           <div className="flex gap-2">
             {(["players", "picks"] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)} className={`display rounded-lg px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide ${tab === t ? "bg-team text-team-ink" : "bg-sunk text-ink-2"}`}>{t}</button>
+              <button key={t} onClick={() => setTab(t)} className={`display rounded-lg px-3 py-1.5 text-[15px] font-bold uppercase tracking-wide ${tab === t ? "bg-team text-team-ink" : "bg-sunk text-ink-2"}`}>{t}</button>
             ))}
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <SectionLabel right={<span className="num text-[12px] text-ink-3">{give.length} selected</span>}>Your offer</SectionLabel>
+              <SectionLabel right={<span className="num text-[14px] text-ink-3">{give.length} selected</span>}>Your offer</SectionLabel>
               <div className="rail flex max-h-[42dvh] flex-col gap-1.5 overflow-y-auto pr-1">
                 {tab === "players"
                   ? myRoster.map((p) => <PlayerCard key={p.id} player={p} year={state.year} selected={has(give, { type: "PLAYER", id: p.id })} onClick={() => toggle(give, setGive, { type: "PLAYER", id: p.id })} />)
@@ -73,7 +73,7 @@ export function TradeBuilder({ state, dispatch, snapshot, initialPartner, initia
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <SectionLabel right={<span className="num text-[12px] text-ink-3">{get.length} selected</span>}>Their assets</SectionLabel>
+              <SectionLabel right={<span className="num text-[14px] text-ink-3">{get.length} selected</span>}>Their assets</SectionLabel>
               <div className="rail flex max-h-[42dvh] flex-col gap-1.5 overflow-y-auto pr-1">
                 {tab === "players"
                   ? theirRoster.map((p) => <PlayerCard key={p.id} player={p} year={state.year} selected={has(get, { type: "PLAYER", id: p.id })} onClick={() => toggle(get, setGet, { type: "PLAYER", id: p.id })} />)
@@ -89,13 +89,13 @@ export function TradeBuilder({ state, dispatch, snapshot, initialPartner, initia
                 <InterestMeter interest={evaluation.interest} />
               </div>
               {evaluation.blockers.map((b) => (
-                <div key={b} className="text-[14px] text-down">{b}</div>
+                <div key={b} className="text-[16px] text-down">{b}</div>
               ))}
               {evaluation.reasons.map((r) => (
-                <div key={r} className="text-[14px] text-ink-2">{r}</div>
+                <div key={r} className="text-[16px] text-ink-2">{r}</div>
               ))}
               {evaluation.counter && !evaluation.blockers.length && evaluation.interest !== "STRONG INTEREST" && (
-                <button onClick={() => { setGive([...give, evaluation.counter!]); dispatch({ type: "TRADE_CLEAR" }); }} className="display self-start rounded-lg bg-risk-soft px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-risk">
+                <button onClick={() => { setGive([...give, evaluation.counter!]); dispatch({ type: "TRADE_CLEAR" }); }} className="display self-start rounded-lg bg-risk-soft px-3 py-1.5 text-[15px] font-bold uppercase tracking-wide text-risk">
                   They'd want {assetLabel(state, evaluation.counter)} added · Add it
                 </button>
               )}
@@ -133,10 +133,10 @@ export function pickLabel(p: DraftPick): string {
 export function PickRow({ pick, selected, onClick }: { pick: DraftPick; selected?: boolean; onClick?: () => void }) {
   const inner = (
     <div className="flex items-center gap-3">
-      <div className="display flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sunk text-[15px] font-bold text-ink-2">R{pick.round}</div>
+      <div className="display flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-sunk text-[17px] font-bold text-ink-2">R{pick.round}</div>
       <div className="min-w-0 flex-1">
-        <div className="text-[15px] font-bold tracking-tight">{pickLabel(pick)}</div>
-        <div className="text-[12px] text-ink-2">{pick.originalTeamId !== pick.teamId ? `via ${pick.originalTeamId}` : "Own pick"}</div>
+        <div className="text-[17px] font-bold tracking-tight">{pickLabel(pick)}</div>
+        <div className="text-[14px] text-ink-2">{pick.originalTeamId !== pick.teamId ? `via ${pick.originalTeamId}` : "Own pick"}</div>
       </div>
     </div>
   );

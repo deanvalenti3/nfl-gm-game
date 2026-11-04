@@ -17,7 +17,7 @@ export function Briefing({ state, snapshot, onStart }: { state: RunState; snapsh
 
       <section className="card p-5">
         <div className="label mb-1">Ownership expectations</div>
-        <div className="display text-[24px] font-bold uppercase leading-tight">{sc.objective.headline}</div>
+        <div className="display text-[27px] font-bold uppercase leading-tight">{sc.objective.headline}</div>
       </section>
 
       <section className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
@@ -31,14 +31,14 @@ export function Briefing({ state, snapshot, onStart }: { state: RunState; snapsh
         <div className="label mb-2">Key problems</div>
         <div className="flex flex-wrap gap-2">
           {sc.keyProblems.map((p) => (
-            <Pill key={p} tone="down" className="text-[14px]">{p}</Pill>
+            <Pill key={p} tone="down" className="text-[16px]">{p}</Pill>
           ))}
         </div>
       </section>
 
       <section className="card p-5">
         <div className="label mb-2">Important decisions</div>
-        <ul className="flex flex-col gap-1.5 text-[15px] leading-snug">
+        <ul className="flex flex-col gap-1.5 text-[17px] leading-snug">
           {sc.briefingNotes.map((n) => (
             <li key={n} className="flex gap-2.5">
               <span className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-team" />
